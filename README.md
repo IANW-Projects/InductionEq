@@ -4,7 +4,7 @@ This is a suit for nummerically solving the nonlinear magnetic induction equatio
 
 This project is the base of current mathematical and physics research. Hence, special emphasis is placed on the computational mathematics, meaning the form of discretization, methods of different order for spacial discretization and time integration and admissable boundary conditions for the linear and nonlinear induction equation. Results will be published in the near future. 
 
-Exemplary testcases for the linear and nonlinear induction equation are provided in the folder examples. They inlcude a 3D convergence study for the linear induction equation, inspired by the study of Koley et al. (2012) and two testcases for the nonlinear equation. A more detailed describtion of how to use the script is provided in the files itself. 
+Exemplary testcases for the linear and nonlinear induction equation are provided in the folder examples. They inlcude a 3D convergence study for the linear induction equation ('examples\run_compute_error_rotation_2D'), inspired by the study of Koley et al. (2012), an additional testcase to investigate the influence of the hall term ('examples\run_compute_hall_periodic') and a testcase to test divergence cleaning ('examples\run_clean_div_CG'). A more detailed describtion of how to use the script is provided in the files itself. 
 
 This is still very much work in progress. If you have any questions or want to contribute feel free to contact us.
 
