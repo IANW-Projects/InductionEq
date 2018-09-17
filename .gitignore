@@ -7,3 +7,4 @@ matlab/cl_run_kernel.mexa64
 .vscode/
 matlab/*.m~
 matlab/*/*.m~
+examples/*.m~
