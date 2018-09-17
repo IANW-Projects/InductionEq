@@ -127,6 +127,10 @@ norm2_output(:) = 0;
 cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), field_b_ana, norm2_output, 0);
 I_Results('rel_err') = I_Results('abs_err') / sqrt(sum(norm2_output));
 
+if I_RunOps('save_fields')
+  I_Results('field_b_ana') = field_b_ana;
+end
+
 %Calculate divergence
 cl_run_kernel(I_Tech('device'), 'calc_div', I_IEq('g_range'), I_IEq('l_range'), field_b, field_divB, 0);
 norm2_output(:) = 0;

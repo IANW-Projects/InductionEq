@@ -6,7 +6,7 @@
 %properties that shall be investigated additional functionalities can be
 %enabled, e.g. divergence cleaning.
 
-clc;
+%clc;
 clear;
 close all;
 
@@ -42,30 +42,30 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % constrained by the number of boundary nodes, e.g. the 4th order method 
 % has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
 N = uint32(40); I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
-I_Mesh('XMIN') = -1.0; I_Mesh('XMAX') = 1.0;
-I_Mesh('YMIN') = -1.0; I_Mesh('YMAX') = 1.0;
-I_Mesh('ZMIN') = -1.0; I_Mesh('ZMAX') = 1.0;
+I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 4*pi/3;
+I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 4*pi/3;
+I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 4*pi/3;
 
 % Time integration related variables
-I_TI('cfl') = 0.03; %Define the Courant–Friedrichs–Lewy condition
-I_TI('final_time') = 1.0;
+I_TI('cfl') = 2/double(N); %Define the Courant–Friedrichs–Lewy condition
+I_TI('final_time') = 0.1;
 %Chose the time integrator. Below is a list of up to date available
 %options:
-% SSPRK33, SSPRK43, SSPRK93, SSPRK104,
+% SSPRK33, SSPRK104,
 % KennedyCarpenterLewis2R54C, CalvoFrancoRandez2R64,
 % CarpenterKennedy2N54, ToulorgeDesmet2N84F
-I_TI('time_integrator') = 'SSPRK33';
+I_TI('time_integrator') = 'CarpenterKennedy2N54';
 
 % Induction equation related variables
 %Specify how the three part of the linear induction equation shall be
 %computed. 
 I_IEq('form_uibj') = 'USE_UIBJ_PRODUCT'; % PRODUCT, SPLIT, CENTRAL
 I_IEq('form_source') = 'USE_SOURCE_CENTRAL'; % CENTRAL, SPLIT, ZERO
-I_IEq('form_ujbi') = 'USE_UJBI_SPLIT'; % SPLIT, CENTRAL, PRODUCT
+I_IEq('form_ujbi') = 'USE_UJBI_CENTRAL'; % SPLIT, CENTRAL, PRODUCT
 %Enable or disable Hall-Term
 I_IEq('hall_term') = 'USE_HALL'; % NONE, USE_HALL
 %Enable or disable artificial dissipation
-I_IEq('dissipation') = 'NONE'; %NONE %USE_ARTIFICIAL_DISSIPATION
+I_IEq('dissipation') = 'NONE'; % NONE, USE_ARTIFICIAL_DISSIPATION
 %Specify what kind of artifical dissipation shall be used
 I_IEq('dissipation_form') = 'USE_HIGH_ORDER_DISSIPATION'; %USE_ADAPTIVE_DISSIPATION USE_FIRST_ORDER_DISSIPATION USE_HIGH_ORDER_DISSIPATION
 %Additional parameters needed for adaptive dissipation. For typical values
@@ -86,7 +86,7 @@ I_DC('divergence_cleaning_form') = 'USE_LAPLACE_WIDE_STENCIL_LNS';
 I_DC('absolute_error_threshold') = 1e-3;
 %The divergence cleaner will exit after max_iterations even if the error
 %threshold is not reached
-I_DC('max_iterations') = 200;
+I_DC('max_iterations') = 50;
 
 
 % Technical details
@@ -106,18 +106,20 @@ end
 
 % Option relevant for run
 % Defines the order 
-I_RunOps('order') = 2; %TODO: extended or classical
+I_RunOps('order') = 4; %TODO: extended or classical
 % Specify the testcase. The name of the testcase has to be equal to the
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:
 % rotation_2D, rotation_3D, hall_travelling_wave, hall_periodic
 I_RunOps('testcase') = 'hall_periodic';
 I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
+I_RunOps('periodic') = 'USE_PERIODIC'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
+                                       % if periodic boundary conditions should be used
 % Optional plotting parameters. If set to 1 a 2D plot of the corresponding
 % quantity will be generated
 I_RunOps('plot_numerical_solution') = 1;
 I_RunOps('plot_analytical_solution') = 0;
-I_RunOps('plot_difference') = 0;
+I_RunOps('plot_difference') = 1;
 I_RunOps('plot_divergence') = 0;
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = true;
@@ -133,5 +135,5 @@ fprintf('Testcase: %s \nOrder: %d \nTime integrator: %s\nDT: %.16e   N_STEPS: %5
 %Takes the initialized fields and advances the solution in time 
 induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
 
-fprintf('Divergence Norm: %.15e    Total Energy: %.15e\n\n', ...
-        I_Results('divergence_norm'), I_Results('energy'))
+fprintf('Divergence Norm: %.15e    Total Energy: %.15e\nRelative Error: %.15f %%\n\n', ...
+        I_Results('divergence_norm'), I_Results('energy'), 100*I_Results('rel_err'))

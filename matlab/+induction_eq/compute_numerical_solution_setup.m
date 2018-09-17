@@ -113,7 +113,9 @@ settings_induction_eq = generate_settings(I_IEq, {'form_uibj'; 'form_source'; 'f
 
 settings_time_integration = generate_settings(I_TI, {'DT'});
 
-settings = strcat(settings_induction_eq, settings_time_integration, settings_tech, settings_mesh, settings_dissipation, settings_dc);
+settings_runops = generate_settings(I_RunOps, {'periodic'});
+
+settings = strcat(settings_induction_eq, settings_time_integration, settings_tech, settings_mesh, settings_dissipation, settings_dc, settings_runops);
 
 
 switch I_TI('time_integrator')

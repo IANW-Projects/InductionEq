@@ -6,7 +6,7 @@
 %properties that shall be investigated additional functionalities can be
 %enabled, e.g. divergence cleaning.
 
-clc;
+%clc;
 clear;
 close all;
 
@@ -40,7 +40,7 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 
 % Mesh related parameters. The minimum number of nodes per direction is
 % constrained by the number of boundary nodes, e.g. the 4th order method 
-%has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
+% has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
 N = uint32(40); I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = uint32(12);
 I_Mesh('XMIN') = -1.0; I_Mesh('XMAX') = 1.0;
 I_Mesh('YMIN') = -1.0; I_Mesh('YMAX') = 1.0;
@@ -51,7 +51,7 @@ I_TI('cfl') = 0.95; %Define the Courant–Friedrichs–Lewy condition
 I_TI('final_time') = 2*pi; 
 %Chose the time integrator. Below is a list of up to date available
 %options:
-% SSPRK33, SSPRK43, SSPRK93, SSPRK104,
+% SSPRK33, SSPRK104,
 % KennedyCarpenterLewis2R54C, CalvoFrancoRandez2R64,
 % CarpenterKennedy2N54, ToulorgeDesmet2N84F
 I_TI('time_integrator') = 'CarpenterKennedy2N54';
@@ -80,7 +80,7 @@ I_IEq('CMAX') = 10;
 
 % Divergence cleaning related variables
 %Enable divergence cleaning (true) or disable divergence cleaning (false)
-I_DC('divergence_cleaning') = true;
+I_DC('divergence_cleaning') = false;
 %Choose how the laplace operator will be discretized
 I_DC('divergence_cleaning_form') = 'USE_LAPLACE_WIDE_STENCIL_LNS';
 %USE_LAPLACE_WIDE_STENCIL_LNS USE_LAPLACE_WIDE_STENCIL_DIRICHLET USE_LAPLACE_NARROW_STENCIL_DIRICHLET
@@ -115,10 +115,12 @@ I_RunOps('order') = 4; % 2, 4, 6
 % rotation_2D, rotation_3D, hall_travelling_wave, hall_periodic
 I_RunOps('testcase') = 'rotation_2D';
 I_RunOps('variable_u') = false; % must be set to true if a variable velocity is used
+I_RunOps('periodic') = 'NONE'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
+                                       % if periodic boundary conditions should be used
 % Optional plotting parameters. If set to 1 a 2D plot of the corresponding
 % quantity will be generated
-I_RunOps('plot_numerical_solution') = 1;
-I_RunOps('plot_analytical_solution') = 1;
+I_RunOps('plot_numerical_solution') = 0;
+I_RunOps('plot_analytical_solution') = 0;
 I_RunOps('plot_difference') = 0;
 I_RunOps('plot_divergence') = 0;
 %If set to 1 the magnetic field will be saved to I_Results('field_b')

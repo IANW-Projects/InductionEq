@@ -7,19 +7,26 @@ function [field_b_init, field_u_init, field_rho_init] = initialize()
     %variables, e.g. stepsize, timestep, local work group size, etc...
 
     global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps
-    
+
     % Calculate the stepsize for each dimension
-    DX = double(I_Mesh('XMAX') - I_Mesh('XMIN')) / (double(I_Mesh('NODES_X'))-1);
-    DY = double(I_Mesh('YMAX') - I_Mesh('YMIN')) / (double(I_Mesh('NODES_Y'))-1);
-    DZ = double(I_Mesh('ZMAX') - I_Mesh('ZMIN')) / (double(I_Mesh('NODES_Z'))-1);
+    if strcmp(I_RunOps('periodic'), 'USE_PERIODIC')
+        % the nodes at the right boundary are not included
+        DX = double(I_Mesh('XMAX') - I_Mesh('XMIN')) / double(I_Mesh('NODES_X'));
+        DY = double(I_Mesh('YMAX') - I_Mesh('YMIN')) / double(I_Mesh('NODES_Y'));
+        DZ = double(I_Mesh('ZMAX') - I_Mesh('ZMIN')) / double(I_Mesh('NODES_Z'));
+    else
+        DX = double(I_Mesh('XMAX') - I_Mesh('XMIN')) / (double(I_Mesh('NODES_X'))-1);
+        DY = double(I_Mesh('YMAX') - I_Mesh('YMIN')) / (double(I_Mesh('NODES_Y'))-1);
+        DZ = double(I_Mesh('ZMAX') - I_Mesh('ZMIN')) / (double(I_Mesh('NODES_Z'))-1);
+    end
 
     I_Mesh('DX') = DX; I_Mesh('DY') = DY; I_Mesh('DZ') = DZ;
 
     num_nodes = I_Mesh('NODES_X')*I_Mesh('NODES_Y')*I_Mesh('NODES_Z');
-    
+
     % Depending on device type chose the local work group size. If the
     % device is a gpu the work group size is taken from the device
-    % specifications. In case of a cpu the optimal work group size was determined 
+    % specifications. In case of a cpu the optimal work group size was determined
     % through testing. Depending on the architecture this value may change.
     [~, dev_type, ~, ~, lw_size, ~] = cl_get_devices;
     type = dev_type(I_Tech('device'));
@@ -60,7 +67,7 @@ function [field_b_init, field_u_init, field_rho_init] = initialize()
 
     settings = strcat(settings_tech, settings_mesh);
 
-    % Include all OpenCL and header files needed for compilation. 
+    % Include all OpenCL and header files needed for compilation.
     kernel_path_list =  {};
     kernel_path_list = [kernel_path_list, {sprintf('../include/%s.h', I_RunOps('testcase'))}];
     kernel_path_list = [kernel_path_list, {'../include/utils.h'}];
@@ -68,7 +75,7 @@ function [field_b_init, field_u_init, field_rho_init] = initialize()
 
     % Comile kernel with setting on device
     cl_run_kernel(I_Tech('device'), kernel_path_list, settings);
-    
+
     % Set global and local range for calculation of the inital state
     % The global and local range can either be a vector of type uint32 or
     % double. Double is supported due to the fact that by default Matlab
@@ -94,7 +101,7 @@ function [field_b_init, field_u_init, field_rho_init] = initialize()
     % Global and local range for dot product and norm
     I_Tech('g_range') = uint32([I_Tech('num_nodes_pad'), 1, 1]);
     I_Tech('l_range') = uint32([I_Tech('W_SIZE'), 1, 1]);
-    
+
     % Depending on the discretization of the laplace operator for
     % divergence cleaning set the number of boundary nodes
     if strcmp(I_DC('divergence_cleaning_form'), 'USE_LAPLACE_WIDE_STENCIL_LNS')

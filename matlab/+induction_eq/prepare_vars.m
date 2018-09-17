@@ -15,7 +15,7 @@ function [] = prepare_vars()
     %I_Tech: Contains all variables of technical nature, e.g. the device,
     %computation precision
     %I_RunOps: Specifies the parameters of a computation, e.g. which variables
-    %will be saved, the testcase 
+    %will be saved, the testcase
 
     %Variables in capital letters are program specific defines which are set by
     %openCL compile settings. If the value is a string in captial letters
@@ -46,12 +46,12 @@ function [] = prepare_vars()
     valueSet = {0 '' 0 0 0 0 0 ''};
     I_Tech = containers.Map(keySet, valueSet,'UniformValues',false);
 
-    keySet = {'order', 'testcase', 'variable_u', 'plot_energy', 'plot_numerical_solution', 'plot_analytical_solution', 'plot_difference', 'plot_divergence', 'save_fields'};
-    valueSet = {0 '' 0 0 0 0 0 0 0};
+    keySet = {'order', 'testcase', 'variable_u', 'periodic', 'plot_energy', 'plot_numerical_solution', 'plot_analytical_solution', 'plot_difference', 'plot_divergence', 'save_fields'};
+    valueSet = {0 '' false 'NONE' 0 0 0 0 0 false};
     I_RunOps = containers.Map(keySet, valueSet,'UniformValues',false);
 
-    keySet = {'abs_err', 'rel_err', 'field_b', 'energy', 'divergence_norm', 'runtime', 'kernel_runtime'};
-    valueSet = {0 0 0 0 0 0 0};
+    keySet = {'abs_err', 'rel_err', 'field_b', 'field_b_ana', 'energy', 'divergence_norm', 'runtime', 'kernel_runtime'};
+    valueSet = {0 0 0 0 0 0 0 0};
     I_Results = containers.Map(keySet, valueSet,'UniformValues',false);
 
 end
