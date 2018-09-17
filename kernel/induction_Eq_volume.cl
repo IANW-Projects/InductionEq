@@ -189,8 +189,8 @@ REAL4 inline convec_volume(uint ix, uint iy, uint iz, global REAL4 *d_field_b, g
 
 	dB = (REAL4) {0, 0, 0, 0};
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		Bk = get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_b);
-		uk = get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_u);
+		Bk = get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_b);
+		uk = get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_u);
 
 		dB = dB + SBP_diff[NUM_BOUNDS + bound_x][i] * ext_num_flux_x(Bm, um, Bk, uk);
 	}
@@ -198,8 +198,8 @@ REAL4 inline convec_volume(uint ix, uint iy, uint iz, global REAL4 *d_field_b, g
 
 	dB = (REAL4) {0, 0, 0, 0};
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		Bk = get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_b);
-		uk = get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_u);
+		Bk = get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_b);
+		uk = get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_u);
 
 		dB = dB + SBP_diff[NUM_BOUNDS + bound_y][i] * ext_num_flux_y(Bm, um, Bk, uk);
 	}
@@ -207,8 +207,8 @@ REAL4 inline convec_volume(uint ix, uint iy, uint iz, global REAL4 *d_field_b, g
 
 	dB = (REAL4) {0, 0, 0, 0};
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		Bk = get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_b);
-		uk = get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_u);
+		Bk = get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_b);
+		uk = get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_u);
 
 		dB = dB + SBP_diff[NUM_BOUNDS + bound_z][i] * ext_num_flux_z(Bm, um, Bk, uk);
 	}
@@ -239,8 +239,8 @@ REAL4 inline Hall_volume(uint ix, uint iy, uint iz, global REAL4* d_field_b, glo
 
 	dB = (REAL4) {0, 0, 0, 0};
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		B = get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_b);
-		curlB_rho = get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_curlB_rho);
+		B = get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_b);
+		curlB_rho = get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_curlB_rho);
 
 		dB = dB + SBP_diff[NUM_BOUNDS + bound_x][i] * (curlB_rho.x*B - curlB_rho*B.x);
 	}
@@ -248,8 +248,8 @@ REAL4 inline Hall_volume(uint ix, uint iy, uint iz, global REAL4* d_field_b, glo
 
 	dB = (REAL4) {0, 0, 0, 0};
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		B = get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_b);
-		curlB_rho = get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_curlB_rho);
+		B = get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_b);
+		curlB_rho = get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_curlB_rho);
 
 		dB = dB + SBP_diff[NUM_BOUNDS + bound_y][i] * (curlB_rho.y*B - curlB_rho*B.y);
 	}
@@ -257,8 +257,8 @@ REAL4 inline Hall_volume(uint ix, uint iy, uint iz, global REAL4* d_field_b, glo
 
 	dB = (REAL4) {0, 0, 0, 0};
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		B = get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_b);
-		curlB_rho = get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_curlB_rho);
+		B = get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_b);
+		curlB_rho = get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_curlB_rho);
 
 		dB = dB + SBP_diff[NUM_BOUNDS + bound_z][i] * (curlB_rho.z*B - curlB_rho*B.z);
 	}

@@ -14,7 +14,7 @@ REAL4 inline diff_x(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 	}
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
+		val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
 	}
 
 	return val/((REAL)DX);
@@ -32,7 +32,7 @@ REAL4 inline diff_y(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 	}
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
+		val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
 	}
 
 	return val/((REAL)DY);
@@ -50,7 +50,7 @@ REAL4 inline diff_z(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 	}
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
+		val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
 	}
 
 	return val/((REAL)DZ);
@@ -71,9 +71,9 @@ REAL4 inline flux_difference_split(uint ix, uint iy, uint iz, global REAL4 *d_fi
 		 bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
 	}
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff[NUM_BOUNDS + bound_x][i]*((get_Field(ix,iy,iz,0,0,0,d_field_u).x + get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_u).x)*(get_Field(ix,iy,iz,0,0,0,d_field_b) + get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_b)))/2.0f/((REAL)DX)
-		 		  + SBP_diff[NUM_BOUNDS + bound_y][i]*((get_Field(ix,iy,iz,0,0,0,d_field_u).y + get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_u).y)*(get_Field(ix,iy,iz,0,0,0,d_field_b) + get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_b)))/2.0f/((REAL)DY)
-				  + SBP_diff[NUM_BOUNDS + bound_z][i]*((get_Field(ix,iy,iz,0,0,0,d_field_u).z + get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_u).z)*(get_Field(ix,iy,iz,0,0,0,d_field_b) + get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_b)))/2.0f/((REAL)DZ);
+		val = val + SBP_diff[NUM_BOUNDS + bound_x][i]*((get_vector_field(ix,iy,iz,0,0,0,d_field_u).x + get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_u).x)*(get_vector_field(ix,iy,iz,0,0,0,d_field_b) + get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_b)))/2.0f/((REAL)DX)
+		 		  + SBP_diff[NUM_BOUNDS + bound_y][i]*((get_vector_field(ix,iy,iz,0,0,0,d_field_u).y + get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_u).y)*(get_vector_field(ix,iy,iz,0,0,0,d_field_b) + get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_b)))/2.0f/((REAL)DY)
+				  + SBP_diff[NUM_BOUNDS + bound_z][i]*((get_vector_field(ix,iy,iz,0,0,0,d_field_u).z + get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_u).z)*(get_vector_field(ix,iy,iz,0,0,0,d_field_b) + get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_b)))/2.0f/((REAL)DZ);
 	}
 	return val;
 
@@ -93,9 +93,9 @@ REAL4 inline flux_difference_conservative(uint ix, uint iy, uint iz, global REAL
 		 bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
 	}
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff[NUM_BOUNDS + bound_x][i]*(get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_u).x*get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_b) + get_Field(ix,iy,iz,0,0,0,d_field_u).x*get_Field(ix,iy,iz,0,0,0,d_field_b))/((REAL)DX)
-		 		  + SBP_diff[NUM_BOUNDS + bound_y][i]*(get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_u).y*get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_b) + get_Field(ix,iy,iz,0,0,0,d_field_u).y*get_Field(ix,iy,iz,0,0,0,d_field_b))/((REAL)DY)
-				  + SBP_diff[NUM_BOUNDS + bound_z][i]*(get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_u).z*get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_b) + get_Field(ix,iy,iz,0,0,0,d_field_u).z*get_Field(ix,iy,iz,0,0,0,d_field_b))/((REAL)DZ);
+		val = val + SBP_diff[NUM_BOUNDS + bound_x][i]*(get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_u).x*get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field_b) + get_vector_field(ix,iy,iz,0,0,0,d_field_u).x*get_vector_field(ix,iy,iz,0,0,0,d_field_b))/((REAL)DX)
+		 		  + SBP_diff[NUM_BOUNDS + bound_y][i]*(get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_u).y*get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field_b) + get_vector_field(ix,iy,iz,0,0,0,d_field_u).y*get_vector_field(ix,iy,iz,0,0,0,d_field_b))/((REAL)DY)
+				  + SBP_diff[NUM_BOUNDS + bound_z][i]*(get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_u).z*get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field_b) + get_vector_field(ix,iy,iz,0,0,0,d_field_u).z*get_vector_field(ix,iy,iz,0,0,0,d_field_b))/((REAL)DZ);
 	}
 
 	return val;

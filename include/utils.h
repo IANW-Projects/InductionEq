@@ -84,7 +84,7 @@ inline uint4 calc_sub_idx(uint idx){
 
 // Get the value of the vector field d_field at the 3D index (ix+bx, iy+by, iz+bz) if this index
 // is inside the bounds. Indices out of bounds are set to ix, iy, or iz, respectively.
-inline REAL4 get_Field(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL4 *d_field){
+inline REAL4 get_vector_field(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL4 *d_field){
 
   uint n_ix = ix + ((bx < 0)*check_interior_l(ix,abs(bx)) + (bx > 0)*check_interior_xr(ix,abs(bx)))*bx;
 
@@ -99,7 +99,7 @@ inline REAL4 get_Field(uint ix, uint iy, uint iz, int bx, int by, int bz, global
 
 // Get the value of the scalar field d_field at the 3D index (ix+bx, iy+by, iz+bz) if this index
 // is inside the bounds. Indices out of bounds are set to ix, iy, or iz, respectively.
-inline REAL get_Field_S(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL *d_field){
+inline REAL get_scalar_field(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL *d_field){
 
   uint n_ix = ix + ((bx < 0)*check_interior_l(ix,abs(bx)) + (bx > 0)*check_interior_xr(ix,abs(bx)))*bx;
 
