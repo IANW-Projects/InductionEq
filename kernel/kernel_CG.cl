@@ -1,6 +1,6 @@
 //This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
 
-// Containts kernel specifically needed for the conjugate gradient method
+// Contains kernel specifically needed for the conjugate gradient method
 
 
 // Compute x = a x + y

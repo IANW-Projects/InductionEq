@@ -12,17 +12,12 @@ inline REAL laplace_divcleaning(uint ix, uint iy, uint iz, global REAL *d_field)
 
 	REAL val = 0;
 
-  int bound_x = 0;
-  int bound_y = 0;
-  int bound_z = 0;
-
   #ifdef USE_LAPLACE_WIDE_STENCIL_DIRICHLET
 
-	  for (uint i = 0; i < NUM_BOUNDS_LAPLACE_WS_D0; i++) {
-      bound_x = bound_x + (NUM_BOUNDS_LAPLACE_WS_D0 - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-      bound_y = bound_y + (NUM_BOUNDS_LAPLACE_WS_D0 - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-		  bound_z = bound_z + (NUM_BOUNDS_LAPLACE_WS_D0 - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	  }
+    int bound_x = get_bound_x(ix, NUM_BOUNDS_LAPLACE_WS_D0);
+    int bound_y = get_bound_y(iy, NUM_BOUNDS_LAPLACE_WS_D0);
+    int bound_z = get_bound_z(iz, NUM_BOUNDS_LAPLACE_WS_D0);
+
     for (uint i = 0; i < STENCIL_WIDTH_LAPLACE_WS_D0; i++) {
 		  val = val + SBP_laplace_WS_D0[NUM_BOUNDS_LAPLACE_WS_D0 + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_WS_D0 - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
                 + SBP_laplace_WS_D0[NUM_BOUNDS_LAPLACE_WS_D0 + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_WS_D0 - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)
@@ -31,11 +26,10 @@ inline REAL laplace_divcleaning(uint ix, uint iy, uint iz, global REAL *d_field)
 
   #elif defined USE_LAPLACE_WIDE_STENCIL_LNS
 
-	  for (uint i = 0; i < NUM_BOUNDS_LAPLACE_WS_LN; i++) {
-      bound_x = bound_x + (NUM_BOUNDS_LAPLACE_WS_LN - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-      bound_y = bound_y + (NUM_BOUNDS_LAPLACE_WS_LN - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-		  bound_z = bound_z + (NUM_BOUNDS_LAPLACE_WS_LN - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	  }
+    int bound_x = get_bound_x(ix, NUM_BOUNDS_LAPLACE_WS_LN);
+    int bound_y = get_bound_y(iy, NUM_BOUNDS_LAPLACE_WS_LN);
+    int bound_z = get_bound_z(iz, NUM_BOUNDS_LAPLACE_WS_LN);
+
     for (uint i = 0; i < STENCIL_WIDTH_LAPLACE_WS_LN; i++) {
 		  val = val + SBP_laplace_WS_LN[NUM_BOUNDS_LAPLACE_WS_LN + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_WS_LN - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
                 + SBP_laplace_WS_LN[NUM_BOUNDS_LAPLACE_WS_LN + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_WS_LN - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)
@@ -44,11 +38,10 @@ inline REAL laplace_divcleaning(uint ix, uint iy, uint iz, global REAL *d_field)
 
   #elif defined USE_LAPLACE_NARROW_STENCIL_DIRICHLET
 
-	  for (uint i = 0; i < NUM_BOUNDS_LAPLACE_NS_D0; i++) {
-      bound_x = bound_x + (NUM_BOUNDS_LAPLACE_NS_D0 - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-      bound_y = bound_y + (NUM_BOUNDS_LAPLACE_NS_D0 - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-		  bound_z = bound_z + (NUM_BOUNDS_LAPLACE_NS_D0 - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	  }
+    int bound_x = get_bound_x(ix, NUM_BOUNDS_LAPLACE_NS_D0);
+    int bound_y = get_bound_y(iy, NUM_BOUNDS_LAPLACE_NS_D0);
+    int bound_z = get_bound_z(iz, NUM_BOUNDS_LAPLACE_NS_D0);
+
     for (uint i = 0; i < STENCIL_WIDTH_LAPLACE_NS_D0; i++) {
 		  val = val + SBP_laplace_NS_D0[NUM_BOUNDS_LAPLACE_NS_D0 + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_NS_D0 - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
                 + SBP_laplace_NS_D0[NUM_BOUNDS_LAPLACE_NS_D0 + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_NS_D0 - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)

@@ -19,15 +19,9 @@ kernel void norm2(global REAL4 *d_field, global REAL *output) {
 
   uint4 s_idx = calc_sub_idx(gid);
 
-  int bound_x = 0;
-  int bound_y = 0;
-  int bound_z = 0;
-
-  for (uint i = 0; i < NUM_BOUNDS; i++) {
-    bound_x = bound_x + (NUM_BOUNDS - i)*(check_bound_xr(s_idx.x,i+1) - check_bound_l(s_idx.x,i+1));
-    bound_y = bound_y + (NUM_BOUNDS - i)*(check_bound_yr(s_idx.y,i+1) - check_bound_l(s_idx.y,i+1));
-    bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(s_idx.z,i+1) - check_bound_l(s_idx.z,i+1));
-  }
+  int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
   REAL fac = ((REAL)DX / M_INV[NUM_BOUNDS + bound_x])
            * ((REAL)DY / M_INV[NUM_BOUNDS + bound_y])
@@ -69,15 +63,9 @@ kernel void norm2_diff(global REAL4 *d_field_1, global REAL4 *d_field_2, global 
 
   uint4 s_idx = calc_sub_idx(gid);
 
-  int bound_x = 0;
-  int bound_y = 0;
-  int bound_z = 0;
-
-  for (uint i = 0; i < NUM_BOUNDS; i++) {
-    bound_x = bound_x + (NUM_BOUNDS - i)*(check_bound_xr(s_idx.x,i+1) - check_bound_l(s_idx.x,i+1));
-    bound_y = bound_y + (NUM_BOUNDS - i)*(check_bound_yr(s_idx.y,i+1) - check_bound_l(s_idx.y,i+1));
-    bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(s_idx.z,i+1) - check_bound_l(s_idx.z,i+1));
-  }
+  int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
   REAL fac = ((REAL)DX / M_INV[NUM_BOUNDS + bound_x])
            * ((REAL)DY / M_INV[NUM_BOUNDS + bound_y])
@@ -119,15 +107,9 @@ kernel void norm2_S(global REAL *d_field, global REAL *output) {
 
   uint4 s_idx = calc_sub_idx(gid);
 
-  int bound_x = 0;
-  int bound_y = 0;
-  int bound_z = 0;
-
-  for (uint i = 0; i < NUM_BOUNDS; i++) {
-    bound_x = bound_x + (NUM_BOUNDS - i)*(check_bound_xr(s_idx.x,i+1) - check_bound_l(s_idx.x,i+1));
-    bound_y = bound_y + (NUM_BOUNDS - i)*(check_bound_yr(s_idx.y,i+1) - check_bound_l(s_idx.y,i+1));
-    bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(s_idx.z,i+1) - check_bound_l(s_idx.z,i+1));
-  }
+  int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
   REAL fac = ((REAL)DX / M_INV[NUM_BOUNDS + bound_x])
            * ((REAL)DY / M_INV[NUM_BOUNDS + bound_y])

@@ -9,7 +9,10 @@ inline REAL4 convec_surface(uint ix, uint iy, uint iz, global REAL4 *d_field_b,
 
 	uint idx =  calc_idx(ix,iy,iz);
 
-	REAL4 val;
+	REAL4 val = (REAL4) {0, 0, 0, 0};
+
+// For periodic boundary conditions and a single block, no surface term has to be used.
+#ifndef USE_PERIODIC
 	REAL4 b_bound = b_boundary(ix, iy, iz, current_time);
 
 	val = (REAL)(M_INV[0]/DX) * (
@@ -24,8 +27,9 @@ inline REAL4 convec_surface(uint ix, uint iy, uint iz, global REAL4 *d_field_b,
 			  (check_bound_l(iz,1) * (d_field_u[idx].z > 0)) * (REAL)(-1)
 			+ (check_bound_zr(iz,1) * (d_field_u[idx].z < 0)) * (REAL)(1)
 		) * d_field_u[idx].z * (d_field_b[idx] - b_bound);
+#endif // USE_PERIODIC
 
-  	return val;
+  return val;
 }
 
 inline REAL4 convec_Hall_surface(uint ix, uint iy, uint iz, global REAL4 *d_field_b,
@@ -35,6 +39,8 @@ inline REAL4 convec_Hall_surface(uint ix, uint iy, uint iz, global REAL4 *d_fiel
 	uint idx = calc_idx(ix,iy,iz);
 	REAL4 val = (REAL4) {0, 0, 0, 0};
 
+// For periodic boundary conditions and a single block, no surface term has to be used.
+#ifndef USE_PERIODIC
 	// TODO: Depending on the boundary, we want to have either inflow or outflow BCs!
 	// Up to now, there are only outflow BCs!
 
@@ -68,6 +74,7 @@ inline REAL4 convec_Hall_surface(uint ix, uint iy, uint iz, global REAL4 *d_fiel
 				+ check_bound_zr(iz,1) * (REAL)(1)
 			) * d_field_b[idx].z * d_field_curlB_rho[idx]
 		);
+#endif // USE_PERIODIC
 
-  	return val;
+  return val;
 }

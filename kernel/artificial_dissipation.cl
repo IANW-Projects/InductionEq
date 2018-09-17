@@ -9,15 +9,9 @@ inline REAL4 high_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_f
 
 	uint idx = calc_idx(ix,iy,iz);
 
-  int bound_x = 0;
-  int bound_y = 0;
-  int bound_z = 0;
-
-  for (uint i = 0; i < NUM_BOUNDS; i++) {
-    bound_x = bound_x + (NUM_BOUNDS - i) * (check_bound_xr(ix, i + 1) - check_bound_l(ix, i + 1));
-    bound_y = bound_y + (NUM_BOUNDS - i) * (check_bound_yr(iy, i + 1) - check_bound_l(iy, i + 1));
-    bound_z = bound_z + (NUM_BOUNDS - i) * (check_bound_zr(iz, i + 1) - check_bound_l(iz, i + 1));
-  }
+  int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
 	REAL4 HO_diss = (REAL4) {0, 0, 0, 0};
 
@@ -38,15 +32,9 @@ inline REAL4 first_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_
 
 	uint idx = calc_idx(ix,iy,iz);
 
-	int bound_x = 0;
-	int bound_y = 0;
-	int bound_z = 0;
-
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		 bound_x = bound_x + (NUM_BOUNDS - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-		 bound_y = bound_y + (NUM_BOUNDS - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-		 bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	}
+	int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
 	REAL4 FO_diss = (REAL4) {0, 0, 0, 0};
   REAL4 tmp;
@@ -94,15 +82,9 @@ inline REAL4 adaptive_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_fie
 #ifdef USE_ADAPTIVE_DISSIPATION
 	uint idx = calc_idx(ix,iy,iz);
 
-	int bound_x = 0;
-	int bound_y = 0;
-	int bound_z = 0;
-
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		 bound_x = bound_x + (NUM_BOUNDS - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-		 bound_y = bound_y + (NUM_BOUNDS - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-		 bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	}
+	int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
 	// First order dissipation with adjusted weights
   REAL4 tmp;
