@@ -87,13 +87,13 @@ kernel void calc_u_2_args(global REAL4 *d_field_b1, global REAL4 *d_field_b2,
                           global REAL4 *d_field_curlB_rho, global REAL4 *d_field_u,
                           global REAL *d_field_rho, global REAL *time) {
 
-    uint ix = get_global_id(0);
-    uint iy = get_global_id(1);
-    uint iz = get_global_id(2);
+  uint ix = get_global_id(0);
+  uint iy = get_global_id(1);
+  uint iz = get_global_id(2);
 
-    uint idx = calc_idx(ix,iy,iz);
+  uint idx = calc_idx(ix,iy,iz);
 
-    d_field_u[idx] = u_analytical(ix, iy, iz, time[0]);
+  d_field_u[idx] = u_analytical(ix, iy, iz, time[0]);
 }
 
 /*
@@ -104,13 +104,13 @@ kernel void calc_u_3_args(global REAL4 *d_field_b1, global REAL4 *d_field_b2, gl
                           global REAL4 *d_field_curlB_rho, global REAL4 *d_field_u,
                           global REAL *d_field_rho, global REAL *time) {
 
-    uint ix = get_global_id(0);
-    uint iy = get_global_id(1);
-    uint iz = get_global_id(2);
+  uint ix = get_global_id(0);
+  uint iy = get_global_id(1);
+  uint iz = get_global_id(2);
 
-    uint idx = calc_idx(ix,iy,iz);
+  uint idx = calc_idx(ix,iy,iz);
 
-    d_field_u[idx] = u_analytical(ix, iy, iz, time[0]);
+  d_field_u[idx] = u_analytical(ix, iy, iz, time[0]);
 }
 
 
@@ -259,99 +259,6 @@ kernel void SSPRK33_3(global REAL4 *d_field_b1, global REAL4 *d_field_b2, global
     (REAL)(1.0/3.0) * d_field_b1[idx]
     + (REAL)(2.0/3.0) * (d_field_b3[idx] + (REAL)DT * DB(ix, iy, iz, d_field_b3, d_field_curlB_rho, d_field_u, local_time));
 }
-
-
-/*
-  SSPRK43_X
-
-Perform one time step using the four stage, third order, strong stability preserving explicit Runge-Kutta method
-SSPRK43. The general syntax is `SSPRK43_X(output, inputs...)`.
-
-Starting with the old value `b1`, the new value after one time step is obtained using the temporary arrays `b2` and
-`b3` via
-- `SSPRK43_i(b2, b1, inputs...)
-- `SSPRK43_i(b3, b2, inputs...)
-- `SSPRK43_3(b2, b1, b3, inputs...)
-- `SSPRK43_i(b1, b2, inputs...)
-*/
-// TODO: Update
-/*kernel void SSPRK43_i(global REAL4 *d_field_b2, global const REAL4 *d_field_b1, global const REAL4 *d_field_u, global REAL *time) {
-
-    uint ix = get_global_id(0);
-    uint iy = get_global_id(1);
-    uint iz = get_global_id(2);
-
-    uint idx = calc_idx(ix,iy,iz);
-
-    //TODO: Update time for boundary condition
-	REAL local_time = time[0];
-
-    d_field_b2[idx] = d_field_b1[idx] + (REAL)(DT/2.0) * DB(ix, iy, iz, d_field_b1, d_field_u, local_time);
-}
-
-kernel void SSPRK43_3( global REAL4 *d_field_b2, global const REAL4 *d_field_b1, global const REAL4 *d_field_b3, global const REAL4 *d_field_u, global REAL *time) {
-
-    uint ix = get_global_id(0);
-    uint iy = get_global_id(1);
-    uint iz = get_global_id(2);
-
-    uint idx = calc_idx(ix,iy,iz);
-
-    //TODO: Update time for boundary condition
-	REAL local_time = time[0];
-
-    d_field_b2[idx] = (REAL)(2.0/3.0) * d_field_b1[idx]
-                    + (REAL)(1.0/3.0) * (d_field_b3[idx] + (REAL)(DT/2.0) * DB(ix, iy, iz, d_field_b3, d_field_u, local_time));
-}*/
-
-
-/*
-    SSPRK93_X
-
-Perform one time step using the nine stage, third order, strong stability preserving explicit Runge-Kutta method
-SSPRK93. The general syntax is `SSPRK93_X(output, inputs...)`.
-
-Starting with the old value `b1`, the new value after one time step is obtained using the temporary arrays `b2` and
-`b3` via
-- `SSPRK93_i(b2, b1, inputs...)
-- `SSPRK93_i(b3, b2, inputs...)
-- `SSPRK93_i(b1, b3, inputs...)
-- `SSPRK93_i(b3, b1, inputs...)
-- `SSPRK93_i(b1, b3, inputs...)
-- `SSPRK93_6(b3, b2, b1, inputs...)
-- `SSPRK93_i(b1, b3, inputs...)
-- `SSPRK93_i(b3, b1, inputs...)
-- `SSPRK93_i(b1, b3, inputs...)
-*/
-// TODO: Update
-/*kernel void SSPRK93_i(global REAL4 *d_field_b2, global const REAL4 *d_field_b1, global const REAL4 *d_field_u, global REAL *time) {
-
-    uint ix = get_global_id(0);
-    uint iy = get_global_id(1);
-    uint iz = get_global_id(2);
-
-    uint idx = calc_idx(ix,iy,iz);
-
-    //TODO: Update time for boundary condition
-	REAL local_time = time[0];
-
-    d_field_b2[idx] = d_field_b1[idx] + (REAL)(DT/6.0) * DB(ix, iy, iz, d_field_b1, d_field_u, local_time);
-}
-
-kernel void SSPRK93_6( global REAL4 *d_field_b3, global const REAL4 *d_field_b2, global const REAL4 *d_field_b1, global const REAL4 *d_field_u, global REAL *time) {
-
-    uint ix = get_global_id(0);
-    uint iy = get_global_id(1);
-    uint iz = get_global_id(2);
-
-    uint idx = calc_idx(ix,iy,iz);
-
-    //TODO: Update time for boundary condition
-	REAL local_time = time[0];
-
-    d_field_b3[idx] = (REAL)(3.0/5.0) * d_field_b2[idx]
-                    + (REAL)(2.0/5.0) * (d_field_b1[idx] + (REAL)(DT/6.0) * DB(ix, iy, iz, d_field_b1, d_field_u, local_time));
-}*/
 
 
 /*
