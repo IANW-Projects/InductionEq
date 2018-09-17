@@ -41,7 +41,7 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % Mesh related parameters. The minimum number of nodes per direction is
 % constrained by the number of boundary nodes, e.g. the 4th order method 
 % has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
-N = uint32(40); I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
+N = uint32(120); I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
 I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 4*pi/3;
 I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 4*pi/3;
 I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 4*pi/3;
@@ -110,16 +110,16 @@ I_RunOps('order') = 4; %TODO: extended or classical
 % Specify the testcase. The name of the testcase has to be equal to the
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:
-% rotation_2D, rotation_3D, hall_travelling_wave, hall_periodic
+% rotation_2D, rotation_3D, alfven_periodic_2D, hall_travelling_wave, hall_periodic
 I_RunOps('testcase') = 'hall_periodic';
 I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
 I_RunOps('periodic') = 'USE_PERIODIC'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
                                        % if periodic boundary conditions should be used
 % Optional plotting parameters. If set to 1 a 2D plot of the corresponding
 % quantity will be generated
-I_RunOps('plot_numerical_solution') = 1;
+I_RunOps('plot_numerical_solution') = 0;
 I_RunOps('plot_analytical_solution') = 0;
-I_RunOps('plot_difference') = 1;
+I_RunOps('plot_difference') = 0;
 I_RunOps('plot_divergence') = 0;
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = true;

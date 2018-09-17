@@ -41,14 +41,15 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % Mesh related parameters. The minimum number of nodes per direction is
 % constrained by the number of boundary nodes, e.g. the 4th order method 
 % has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
-N = uint32(40); I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = uint32(12);
-I_Mesh('XMIN') = -1.0; I_Mesh('XMAX') = 1.0;
-I_Mesh('YMIN') = -1.0; I_Mesh('YMAX') = 1.0;
-I_Mesh('ZMIN') = -1.0; I_Mesh('ZMAX') = 1.0;
+N_fac = uint32(1); 
+I_Mesh('NODES_X') = N_fac*uint32(58); I_Mesh('NODES_Y') = N_fac*uint32(100); I_Mesh('NODES_Z') = uint32(12);
+I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 1.1547005383792517; %2/sqrt(3)
+I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 2.0;
+I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 1.0;
 
 % Time integration related variables
 I_TI('cfl') = 0.95; %Define the Courant–Friedrichs–Lewy condition
-I_TI('final_time') = 2*pi; 
+I_TI('final_time') = 200; 
 %Chose the time integrator. Below is a list of up to date available
 %options:
 % SSPRK33, SSPRK104,
@@ -113,9 +114,9 @@ I_RunOps('order') = 4; % 2, 4, 6
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:
 % rotation_2D, rotation_3D, alfven_periodic_2D, hall_travelling_wave, hall_periodic
-I_RunOps('testcase') = 'rotation_2D';
-I_RunOps('variable_u') = false; % must be set to true if a variable velocity is used
-I_RunOps('periodic') = 'NONE'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
+I_RunOps('testcase') = 'alfven_periodic_2D';
+I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
+I_RunOps('periodic') = 'USE_PERIODIC'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
                                        % if periodic boundary conditions should be used
 % Optional plotting parameters. If set to 1 a 2D plot of the corresponding
 % quantity will be generated
