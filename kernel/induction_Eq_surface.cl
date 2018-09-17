@@ -37,6 +37,7 @@ inline REAL4 convec_Hall_surface(uint ix, uint iy, uint iz, global REAL4 *d_fiel
                                  REAL current_time) {
 
 	uint idx = calc_idx(ix,iy,iz);
+
 	REAL4 val = (REAL4) {0, 0, 0, 0};
 
 // For periodic boundary conditions and a single block, no surface term has to be used.

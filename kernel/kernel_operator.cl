@@ -19,9 +19,9 @@ kernel void norm2(global REAL4 *d_field, global REAL *output) {
 
   uint4 s_idx = calc_sub_idx(gid);
 
-  int bound_x = get_bound_x(ix, NUM_BOUNDS);
-  int bound_y = get_bound_y(iy, NUM_BOUNDS);
-  int bound_z = get_bound_z(iz, NUM_BOUNDS);
+  int bound_x = get_bound_x(s_idx.x, NUM_BOUNDS);
+  int bound_y = get_bound_y(s_idx.y, NUM_BOUNDS);
+  int bound_z = get_bound_z(s_idx.z, NUM_BOUNDS);
 
   REAL fac = ((REAL)DX / M_INV[NUM_BOUNDS + bound_x])
            * ((REAL)DY / M_INV[NUM_BOUNDS + bound_y])
@@ -63,9 +63,9 @@ kernel void norm2_diff(global REAL4 *d_field_1, global REAL4 *d_field_2, global 
 
   uint4 s_idx = calc_sub_idx(gid);
 
-  int bound_x = get_bound_x(ix, NUM_BOUNDS);
-  int bound_y = get_bound_y(iy, NUM_BOUNDS);
-  int bound_z = get_bound_z(iz, NUM_BOUNDS);
+  int bound_x = get_bound_x(s_idx.x, NUM_BOUNDS);
+  int bound_y = get_bound_y(s_idx.y, NUM_BOUNDS);
+  int bound_z = get_bound_z(s_idx.z, NUM_BOUNDS);
 
   REAL fac = ((REAL)DX / M_INV[NUM_BOUNDS + bound_x])
            * ((REAL)DY / M_INV[NUM_BOUNDS + bound_y])
@@ -107,9 +107,9 @@ kernel void norm2_S(global REAL *d_field, global REAL *output) {
 
   uint4 s_idx = calc_sub_idx(gid);
 
-  int bound_x = get_bound_x(ix, NUM_BOUNDS);
-  int bound_y = get_bound_y(iy, NUM_BOUNDS);
-  int bound_z = get_bound_z(iz, NUM_BOUNDS);
+  int bound_x = get_bound_x(s_idx.x, NUM_BOUNDS);
+  int bound_y = get_bound_y(s_idx.y, NUM_BOUNDS);
+  int bound_z = get_bound_z(s_idx.z, NUM_BOUNDS);
 
   REAL fac = ((REAL)DX / M_INV[NUM_BOUNDS + bound_x])
            * ((REAL)DY / M_INV[NUM_BOUNDS + bound_y])

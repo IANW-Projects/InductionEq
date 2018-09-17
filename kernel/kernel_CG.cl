@@ -4,6 +4,7 @@
 
 
 // Compute x = a x + y
+// Note: There are some problems (with MatCL, OpenCL) if a is given as REAL instead of gloobal REAL*
 kernel void calc_axpy(global REAL *d_x, global REAL *d_y, global REAL *a) {
 
    uint ix = get_global_id(0) + BNODES;
@@ -16,6 +17,7 @@ kernel void calc_axpy(global REAL *d_x, global REAL *d_y, global REAL *a) {
 }
 
 // Compute x = x + a y
+// Note: There are some problems (with MatCL, OpenCL) if a is given as REAL instead of gloobal REAL*
 kernel void calc_xpay(global REAL *d_x, global REAL *d_y, global REAL *a) {
 
    uint ix = get_global_id(0) + BNODES;

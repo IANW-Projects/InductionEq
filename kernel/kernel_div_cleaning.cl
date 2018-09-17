@@ -102,8 +102,8 @@ kernel void projector_divcleaning(global REAL4 *d_field_b, global REAL *d_field_
   uint idx = calc_idx(ix,iy,iz);
 
   #ifdef USE_LAPLACE_WIDE_STENCIL_LNS
-    d_field_b[idx].xyz = d_field_b[idx].xyz - grad_adj(ix,iy, iz, d_field_phi).xyz;
+    d_field_b[idx].xyz = d_field_b[idx].xyz - grad_adj(ix, iy, iz, d_field_phi).xyz;
   #else
-    d_field_b[idx].xyz = d_field_b[idx].xyz + grad(ix,iy, iz, d_field_phi).xyz;
+    d_field_b[idx].xyz = d_field_b[idx].xyz + grad(ix, iy, iz, d_field_phi).xyz;
   #endif
 }
