@@ -1,4 +1,4 @@
-# Induction equation
+# Induction Equation
 
 This is a suit for numerically solving the nonlinear magnetic induction equation with OpenCL. It is intended as a tool to investigate different properties of the linear and nonlinear induction equation for user specified testcases. All numerical aspects are encapsulated in OpenCL kernels. The OpenCL host side is abstracted with the help of [MatCL](https://github.com/philipheinisch/MatCL), an OpenCL interface for MathWorks Matlab. This provides the user with an intuitive and easy way of handling and processing input and output data without any intricate knowledge of OpenCL and allows for interactive development. Support for [Julia](https://julialang.org/) is currently under development and will be provided in the near future. Usage of the OpenCL kernels is not limited to Matlab or Julia; on the contrary they can be used with any kind of host code or application that supports OpenCL. 
 
