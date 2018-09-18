@@ -54,7 +54,7 @@ REAL4 inline sigma(REAL4 d_field1, REAL4 d_field2) {
 
 
 // Auxillary function for high order dissipation
-// Used to compute the intermediate result D*a of equation (?) 
+// Used to compute the intermediate result D*a of equation (?)
 REAL4 inline diff_HOD_x(uint ix, uint iy, uint iz, int bound_x, int start, global REAL4 *d_field) {
 
   REAL4 HOD = (REAL4) {0, 0, 0, 0};
@@ -64,7 +64,7 @@ REAL4 inline diff_HOD_x(uint ix, uint iy, uint iz, int bound_x, int start, globa
       + M_INV[NUM_BOUNDS + bound_x]
         * D_HO[NUM_BOUNDS + bound_x][start + STENCIL_WIDTH_HOD - 1]
         * D_HO[NUM_BOUNDS][i] * pown(-1.0, (int)(ORDER / 2 + 1))
-        * get_Field(ix, iy, iz, i + start, 0, 0, d_field);
+        * get_vector_field(ix, iy, iz, i + start, 0, 0, d_field);
   }
 
   return HOD;
@@ -79,7 +79,7 @@ REAL4 inline diff_HOD_y(uint ix, uint iy, uint iz, int bound_y, int start, globa
       + M_INV[NUM_BOUNDS + bound_y]
         * D_HO[NUM_BOUNDS + bound_y][start + STENCIL_WIDTH_HOD - 1]
         * D_HO[NUM_BOUNDS][i] * pown(-1.0, (int)(ORDER / 2 + 1))
-        * get_Field(ix, iy, iz, 0, i + start, 0, d_field);
+        * get_vector_field(ix, iy, iz, 0, i + start, 0, d_field);
   }
 
   return HOD;
@@ -94,7 +94,7 @@ REAL4 inline diff_HOD_z(uint ix, uint iy, uint iz, int bound_z, int start, globa
       + M_INV[NUM_BOUNDS + bound_z]
         * D_HO[NUM_BOUNDS + bound_z][start + STENCIL_WIDTH_HOD - 1]
         * D_HO[NUM_BOUNDS][i] * pown(-1.0, (int)(ORDER / 2 + 1))
-        * get_Field(ix, iy, iz, 0, 0, i + start, d_field);
+        * get_vector_field(ix, iy, iz, 0, 0, i + start, d_field);
   }
 
   return HOD;

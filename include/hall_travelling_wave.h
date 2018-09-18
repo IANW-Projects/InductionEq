@@ -31,7 +31,7 @@ Initial condition of the magnetic field.
 */
 inline REAL4 b_init(uint ix, uint iy, uint iz) {
 
-	return b_analytical(ix, iy, iz, (REAL)0);
+	return b_analytical(ix, iy, iz, (REAL)(0));
 }
 
 /*
@@ -60,14 +60,13 @@ inline REAL4 b_boundary(uint ix, uint iy, uint iz, REAL time) {
 }*/
 
 
-inline REAL4 u_analytical(uint ix, uint iy, uint iz, REAL time)
-{
-	//TODO: Mind box geometry
-	REAL x = -1.0 + ix*(REAL)DX;
-	REAL y = -1.0 + iy*(REAL)DY;
-	REAL z = -1.0 + iz*(REAL)DZ;
+inline REAL4 u_analytical(uint ix, uint iy, uint iz, REAL time) {
 
-  REAL xi = CONST_k * z - CONST_omega * time;
+	REAL x = (REAL)XMIN + ix*(REAL)DX;
+	REAL y = (REAL)YMIN + iy*(REAL)DY;
+	REAL z = (REAL)ZMIN + iz*(REAL)DZ;
+
+	REAL xi = CONST_k * z - CONST_omega * time;
   REAL Omega = ( (CONST_k * CONST_uz - CONST_omega)*(CONST_k * CONST_uz - CONST_omega)
                   - CONST_k*CONST_k * CONST_Bz*CONST_Bz)
               / (CONST_Bz * (CONST_k*CONST_uz - CONST_omega) * CONST_k*CONST_k);

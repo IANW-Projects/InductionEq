@@ -1,2 +1,13 @@
-docs/.ipynb_checkpoints/
+# MatCL binary files
+matlab/cl_dbg_kernel.mexa64
+matlab/cl_get_devices.mexa64
+matlab/cl_run_kernel.mexa64
 
+# files used by some editors and IDEs
+.vscode/
+matlab/*.m~
+matlab/*/*.m~
+examples/*.m~
+
+# temporary files for jupyter/ipython notebooks
+docs/.ipynb_checkpoints/

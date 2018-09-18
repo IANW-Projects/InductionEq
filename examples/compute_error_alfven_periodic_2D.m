@@ -6,7 +6,7 @@
 %properties that shall be investigated additional functionalities can be
 %enabled, e.g. divergence cleaning.
 
-clc;
+%clc;
 clear;
 close all;
 
@@ -40,25 +40,26 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 
 % Mesh related parameters. The minimum number of nodes per direction is
 % constrained by the number of boundary nodes, e.g. the 4th order method 
-%has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
-N = uint32(40); I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = uint32(12);
-I_Mesh('XMIN') = -1.0; I_Mesh('XMAX') = 1.0;
-I_Mesh('YMIN') = -1.0; I_Mesh('YMAX') = 1.0;
-I_Mesh('ZMIN') = -1.0; I_Mesh('ZMAX') = 1.0;
+% has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
+N_fac = uint32(1); 
+I_Mesh('NODES_X') = N_fac*uint32(58); I_Mesh('NODES_Y') = N_fac*uint32(100); I_Mesh('NODES_Z') = uint32(12);
+I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 1.1547005383792517; %2/sqrt(3)
+I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 2.0;
+I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 1.0;
 
 % Time integration related variables
 I_TI('cfl') = 0.95; %Define the Courant–Friedrichs–Lewy condition
-I_TI('final_time') = 2*pi; 
+I_TI('final_time') = 200; 
 %Chose the time integrator. Below is a list of up to date available
 %options:
-% SSPRK33, SSPRK43, SSPRK93, SSPRK104,
+% SSPRK33, SSPRK104,
 % KennedyCarpenterLewis2R54C, CalvoFrancoRandez2R64,
 % CarpenterKennedy2N54, ToulorgeDesmet2N84F
 I_TI('time_integrator') = 'CarpenterKennedy2N54';
 
 
 % Induction equation related variables
-%Specify how the three part of the linear induction equation shall be
+%Specify how the three parts of the linear induction equation shall be
 %computed. 
 I_IEq('form_uibj') = 'USE_UIBJ_PRODUCT'; % PRODUCT, SPLIT, CENTRAL
 I_IEq('form_source') = 'USE_SOURCE_CENTRAL'; % CENTRAL, SPLIT, ZERO
@@ -80,7 +81,7 @@ I_IEq('CMAX') = 10;
 
 % Divergence cleaning related variables
 %Enable divergence cleaning (true) or disable divergence cleaning (false)
-I_DC('divergence_cleaning') = true;
+I_DC('divergence_cleaning') = false;
 %Choose how the laplace operator will be discretized
 I_DC('divergence_cleaning_form') = 'USE_LAPLACE_WIDE_STENCIL_LNS';
 %USE_LAPLACE_WIDE_STENCIL_LNS USE_LAPLACE_WIDE_STENCIL_DIRICHLET USE_LAPLACE_NARROW_STENCIL_DIRICHLET
@@ -108,17 +109,22 @@ end
 
 % Options relevant for a run
 % Defines the order 
-I_RunOps('order') = 4; % 2, 4, 6
+I_RunOps('order') = 2; % 2, 4, 6
 % Specify the testcase. The name of the testcase has to be equal to the
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:
-% rotation_2D, rotation_3D, hall_travelling_wave, hall_periodic
-I_RunOps('testcase') = 'rotation_2D';
-I_RunOps('variable_u') = false; % must be set to true if a variable velocity is used
-% Optional plotting parameters. If set to 1 a 2D plot of the corresponding
-% quantity will be generated
-I_RunOps('plot_numerical_solution') = 1;
-I_RunOps('plot_analytical_solution') = 1;
+% rotation_2D, rotation_3D, alfven_periodic_2D, hall_travelling_wave, hall_periodic
+I_RunOps('testcase') = 'alfven_periodic_2D';
+I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
+I_RunOps('periodic') = 'USE_PERIODIC'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
+                                       % if periodic boundary conditions should be used
+% Optional plotting parameters (2D plots). 
+% Choose the cross section with
+% 'x', 'y', 'z'
+% If you want to plot multiple cross sections use
+% 'xy', 'xz', 'yz', 'xyz'
+I_RunOps('plot_numerical_solution') = 0;
+I_RunOps('plot_analytical_solution') = 0;
 I_RunOps('plot_difference') = 0;
 I_RunOps('plot_divergence') = 0;
 %If set to 1 the magnetic field will be saved to I_Results('field_b')

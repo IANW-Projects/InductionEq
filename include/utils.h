@@ -82,9 +82,64 @@ inline uint4 calc_sub_idx(uint idx){
   return s_idx;
 }
 
+#ifdef USE_PERIODIC
+
+// Get the value of the vector field d_field at the 3D index (ix+bx, iy+by, iz+bz) with
+// periodic boundary conditions.
+inline REAL4 get_vector_field(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL4 *d_field) {
+
+  uint n_ix = ix + bx + (bx < 0) * (!check_interior_l( ix, abs(bx))) * NODES_X
+                      - (bx > 0) * (!check_interior_xr(ix, abs(bx))) * NODES_X;
+
+  uint n_iy = iy + by + (by < 0) * (!check_interior_l( iy, abs(by))) * NODES_Y
+                      - (by > 0) * (!check_interior_yr(iy, abs(by))) * NODES_Y;
+
+  uint n_iz = iz + bz + (bz < 0) * (!check_interior_l( iz, abs(bz))) * NODES_Z
+                      - (bz > 0) * (!check_interior_zr(iz, abs(bz))) * NODES_Z;
+
+  uint idx = calc_idx(n_ix, n_iy, n_iz);
+
+  return d_field[idx];
+}
+
+// Get the value of the scalar field d_field at the 3D index (ix+bx, iy+by, iz+bz) with
+// periodic boundary conditions.
+inline REAL get_scalar_field(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL *d_field) {
+
+  uint n_ix = ix + bx + (bx < 0) * (!check_interior_l( ix, abs(bx))) * NODES_X
+                      - (bx > 0) * (!check_interior_xr(ix, abs(bx))) * NODES_X;
+
+  uint n_iy = iy + by + (by < 0) * (!check_interior_l( iy, abs(by))) * NODES_Y
+                      - (by > 0) * (!check_interior_yr(iy, abs(by))) * NODES_Y;
+
+  uint n_iz = iz + bz + (bz < 0) * (!check_interior_l( iz, abs(bz))) * NODES_Z
+                      - (bz > 0) * (!check_interior_zr(iz, abs(bz))) * NODES_Z;
+
+  uint idx = calc_idx(n_ix, n_iy, n_iz);
+
+  return d_field[idx];
+}
+
+// Calculate the boundary index offset of the row of the derivative etc. operator compared to the central one
+// in x,y,z direction. Since // periodic boundaries are used, the central row is applied.
+inline int get_bound_x(uint ix, uint num_bounds) {
+
+  return (int)(0);
+}
+inline int get_bound_y(uint iy, uint num_bounds) {
+
+  return (int)(0);
+}
+inline int get_bound_z(uint iz, uint num_bounds) {
+
+  return (int)(0);
+}
+
+#else // nonperiodic boundaries
+
 // Get the value of the vector field d_field at the 3D index (ix+bx, iy+by, iz+bz) if this index
 // is inside the bounds. Indices out of bounds are set to ix, iy, or iz, respectively.
-inline REAL4 get_Field(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL4 *d_field){
+inline REAL4 get_vector_field(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL4 *d_field){
 
   uint n_ix = ix + ((bx < 0)*check_interior_l(ix,abs(bx)) + (bx > 0)*check_interior_xr(ix,abs(bx)))*bx;
 
@@ -99,7 +154,7 @@ inline REAL4 get_Field(uint ix, uint iy, uint iz, int bx, int by, int bz, global
 
 // Get the value of the scalar field d_field at the 3D index (ix+bx, iy+by, iz+bz) if this index
 // is inside the bounds. Indices out of bounds are set to ix, iy, or iz, respectively.
-inline REAL get_Field_S(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL *d_field){
+inline REAL get_scalar_field(uint ix, uint iy, uint iz, int bx, int by, int bz, global REAL *d_field){
 
   uint n_ix = ix + ((bx < 0)*check_interior_l(ix,abs(bx)) + (bx > 0)*check_interior_xr(ix,abs(bx)))*bx;
 
@@ -111,5 +166,40 @@ inline REAL get_Field_S(uint ix, uint iy, uint iz, int bx, int by, int bz, globa
 
   return d_field[idx];
 }
+
+// Calculate the boundary index (offset of the row of the derivative etc. operator compared to the central one)
+// in x,y,z direction.
+inline int get_bound_x(uint ix, uint num_bounds) {
+
+  int bound_x = 0;
+
+  for (uint i = 0; i < num_bounds; i++) {
+    bound_x = bound_x + (num_bounds - i) * (check_bound_xr(ix, i + 1) - check_bound_l(ix, i + 1));
+  }
+
+  return bound_x;
+}
+inline int get_bound_y(uint iy, uint num_bounds) {
+
+  int bound_y = 0;
+
+  for (uint i = 0; i < num_bounds; i++) {
+    bound_y = bound_y + (num_bounds - i) * (check_bound_yr(iy, i + 1) - check_bound_l(iy, i + 1));
+  }
+
+  return bound_y;
+}
+inline int get_bound_z(uint iz, uint num_bounds) {
+
+  int bound_z = 0;
+
+  for (uint i = 0; i < num_bounds; i++) {
+    bound_z = bound_z + (num_bounds - i) * (check_bound_zr(iz, i + 1) - check_bound_l(iz, i + 1));
+  }
+
+  return bound_z;
+}
+
+#endif // USE_PERIODIC
 
 #endif //UTILS_H

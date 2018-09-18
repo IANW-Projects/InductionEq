@@ -13,13 +13,10 @@ REAL4 inline diff_x(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 
 	REAL4 val = (REAL4) {0, 0, 0, 0};
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-	}
+	int bound_x = get_bound_x(ix, NUM_BOUNDS);
 
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
-    val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
+    val = val + SBP_diff[NUM_BOUNDS + bound_x][i]*get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
   }
 
 	return val / ((REAL)DX);
@@ -30,13 +27,10 @@ REAL4 inline diff_y(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 
 	REAL4 val = (REAL4) {0, 0, 0, 0};
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-	}
+	int bound_y = get_bound_y(iy, NUM_BOUNDS);
 
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
-    val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
+    val = val + SBP_diff[NUM_BOUNDS + bound_y][i]*get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
   }
 
 	return val / ((REAL)DY);
@@ -47,13 +41,10 @@ REAL4 inline diff_z(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 
 	REAL4 val = (REAL4) {0, 0, 0, 0};
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	}
+	int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
-    val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
+    val = val + SBP_diff[NUM_BOUNDS + bound_z][i]*get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
   }
 
 	return val / ((REAL)DZ);
@@ -66,13 +57,10 @@ REAL4 inline diff_adj_x(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 
 	REAL4 val = (REAL4) {0, 0, 0, 0};
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-	}
+	int bound_x = get_bound_x(ix, NUM_BOUNDS);
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
+		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound_x][i]*get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
 	}
 
 	return val / ((REAL)DX);
@@ -84,13 +72,10 @@ REAL4 inline diff_adj_y(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 
 	REAL4 val = (REAL4) {0, 0, 0, 0};
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-	}
+	int bound_y = get_bound_y(iy, NUM_BOUNDS);
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
+		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound_y][i]*get_vector_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
 	}
 
 	return val / ((REAL)DY);
@@ -101,13 +86,10 @@ REAL4 inline diff_adj_z(uint ix, uint iy, uint iz, global REAL4 *d_field) {
 
 	REAL4 val = (REAL4) {0, 0, 0, 0};
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	}
+	int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound][i]*get_Field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
+		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound_z][i]*get_vector_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
 	}
 
 	return val / ((REAL)DZ);
@@ -163,13 +145,10 @@ REAL inline diff_S_x(uint ix, uint iy, uint iz, global REAL *d_field) {
 
 	REAL val = 0;
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-	}
+	int bound_x = get_bound_x(ix, NUM_BOUNDS);
 
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
-    val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field_S(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
+    val = val + SBP_diff[NUM_BOUNDS + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
   }
 
 	return val / ((REAL)DX);
@@ -180,13 +159,10 @@ REAL inline diff_S_y(uint ix, uint iy, uint iz, global REAL *d_field) {
 
 	REAL val = 0;
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-	}
+	int bound_y = get_bound_y(iy, NUM_BOUNDS);
 
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
-    val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field_S(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
+    val = val + SBP_diff[NUM_BOUNDS + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
   }
 
 	return val / ((REAL)DY);
@@ -197,13 +173,10 @@ REAL inline diff_S_z(uint ix, uint iy, uint iz, global REAL *d_field) {
 
 	REAL val = 0;
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	}
+	int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
-    val = val + SBP_diff[NUM_BOUNDS + bound][i]*get_Field_S(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
+    val = val + SBP_diff[NUM_BOUNDS + bound_z][i]*get_scalar_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
   }
 
 	return val / ((REAL)DZ);
@@ -216,13 +189,10 @@ REAL inline diff_adj_S_x(uint ix, uint iy, uint iz, global REAL *d_field) {
 
 	REAL val = 0;
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-	}
+	int bound_x = get_bound_x(ix, NUM_BOUNDS);
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound][i]*get_Field_S(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
+		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2),0,0,d_field);
 	}
 
 	return val / ((REAL)DX);
@@ -233,13 +203,10 @@ REAL inline diff_adj_S_y(uint ix, uint iy, uint iz, global REAL *d_field) {
 
 	REAL val = 0;
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-	}
+	int bound_y = get_bound_y(iy, NUM_BOUNDS);
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound][i]*get_Field_S(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
+		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH - 1)/2),0,d_field);
 	}
 
 	return val / ((REAL)DY);
@@ -250,13 +217,10 @@ REAL inline diff_adj_S_z(uint ix, uint iy, uint iz, global REAL *d_field) {
 
 	REAL val = 0;
 
-	int bound = 0;
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		bound = bound + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	}
+	int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
 	for (uint i = 0; i < STENCIL_WIDTH; i++) {
-		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound][i]*get_Field_S(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
+		val = val + SBP_diff_adjoint[NUM_BOUNDS + bound_z][i]*get_scalar_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH - 1)/2),d_field);
 	}
 
 	return val / ((REAL)DZ);

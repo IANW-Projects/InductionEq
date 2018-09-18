@@ -93,18 +93,20 @@ if I_RunOps('save_fields') == 1
 end
 
 %Optional plots
-if I_RunOps('plot_field_b') == 1
-    plot_2D(field_b, 'Z', I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'B-Field after cleaning');
+
+if ismember(lower(char(I_RunOps('plot_field_b'))),{'x','y','z','xy', 'xz', 'yz', 'xyz'})
+    plot_2D(field_b, I_RunOps('plot_field_b'),...
+        I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'B-Field after cleaning');
 end
 
-if I_RunOps('plot_divergence') == 1
-    plot_2D(field_b_div, 'Z', I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Divergence after cleaning');
+if ismember(lower(char(I_RunOps('plot_divergence'))),{'x','y','z','xy', 'xz', 'yz', 'xyz'})
+    plot_2D(field_b_div, I_RunOps('plot_divergence'),...
+        I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Divergence after cleaning');
 end
 
-if I_RunOps('plot_phi') == 1
-    plot_2D(field_phi, 'Z', I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Phi');
+if ismember(lower(char(I_RunOps('plot_phi'))),{'x','y','z','xy', 'xz', 'yz', 'xyz'})
+    plot_2D(field_phi, I_RunOps('plot_phi'),...
+        I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Phi');
 end
-
-
 
 end

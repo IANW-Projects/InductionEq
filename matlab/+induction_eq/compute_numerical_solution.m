@@ -127,6 +127,10 @@ norm2_output(:) = 0;
 cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), field_b_ana, norm2_output, 0);
 I_Results('rel_err') = I_Results('abs_err') / sqrt(sum(norm2_output));
 
+if I_RunOps('save_fields')
+  I_Results('field_b_ana') = field_b_ana;
+end
+
 %Calculate divergence
 cl_run_kernel(I_Tech('device'), 'calc_div', I_IEq('g_range'), I_IEq('l_range'), field_b, field_divB, 0);
 norm2_output(:) = 0;
@@ -139,21 +143,26 @@ cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), f
 I_Results('energy') = sum(norm2_output);
 
 %Optional plots
-if I_RunOps('plot_numerical_solution') == 1
-    plot_2D(field_b, 'Z', I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Numerical Solution');
+if ismember(lower(char(I_RunOps('plot_numerical_solution'))),{'x','y','z','xy', 'xz', 'yz', 'xyz'})
+    plot_2D(field_b, I_RunOps('plot_numerical_solution'),...
+        I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Numerical Solution');
 end
 
-if I_RunOps('plot_analytical_solution') == 1
-    plot_2D(field_b_ana, 'Z', I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Analytical Solution');
+if ismember(lower(char(I_RunOps('plot_analytical_solution'))),{'x','y','z','xy', 'xz', 'yz', 'xyz'})
+    plot_2D(field_b_ana, I_RunOps('plot_analytical_solution'),...
+        I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Analytical Solution');
 end
 
-if I_RunOps('plot_difference') == 1
+if ismember(lower(char(I_RunOps('plot_difference'))),{'x','y','z','xy', 'xz', 'yz', 'xyz'})
     field_diff = field_b(:,:) - field_b_ana(:,:);
-    plot_2D(field_diff, 'Z', I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Diff. of Analytical and Num. Solution');
+    plot_2D(field_diff, I_RunOps('plot_difference'),...
+        I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Diff. of Analytical and Num. Solution');
 end
 
-if I_RunOps('plot_divergence') == 1
-    plot_2D(field_divB, 'Z', I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Divergence of Num. Solution');
+if ismember(lower(char(I_RunOps('plot_divergence'))),{'x','y','z','xy', 'xz', 'yz', 'xyz'})
+    plot_2D(field_divB, I_RunOps('plot_divergence'),...
+        I_Mesh('NODES_X'), I_Mesh('NODES_Y'), I_Mesh('NODES_Z'), 'Divergence of Num. Solution');
 end
+
 
 end

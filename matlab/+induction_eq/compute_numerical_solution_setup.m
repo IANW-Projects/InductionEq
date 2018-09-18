@@ -11,7 +11,7 @@ if strcmp(I_Tech('REAL'),'float')
     field_b3 = single(zeros(4, I_Tech('num_nodes_pad')));
     field_divB = single(zeros(1, I_Tech('num_nodes_pad')));
     field_curlB_rho = single(zeros(4, I_Tech('num_nodes_pad')));
-    current_time = single(zeros(2));
+    current_time = single(zeros(2)); % contains two elements: time at the beginning of a step and of a stage
     norm2_output = single(zeros(1, I_Tech('num_groups')));
 
     % Allocate memory for field used for divergence cleaning
@@ -31,7 +31,7 @@ else
     field_b3 = double(zeros(4, I_Tech('num_nodes_pad')));
     field_divB = double(zeros(1, I_Tech('num_nodes_pad')));
     field_curlB_rho = double(zeros(4, I_Tech('num_nodes_pad')));
-    current_time = double(zeros(2));
+    current_time = double(zeros(2)); % contains two elements: time at the beginning of a step and of a stage
     norm2_output = double(zeros(1, I_Tech('num_groups')));
 
     % Allocate memory for field used for divergence cleaning
@@ -113,52 +113,142 @@ settings_induction_eq = generate_settings(I_IEq, {'form_uibj'; 'form_source'; 'f
 
 settings_time_integration = generate_settings(I_TI, {'DT'});
 
-settings = strcat(settings_induction_eq, settings_time_integration, settings_tech, settings_mesh, settings_dissipation, settings_dc);
+settings_runops = generate_settings(I_RunOps, {'periodic'});
+
+settings = strcat(settings_induction_eq, settings_time_integration, settings_tech, settings_mesh, settings_dissipation, settings_dc, settings_runops);
 
 
 switch I_TI('time_integrator')
 
     case 'SSPRK33'
-        RK_Step = {'SSPRK33_1', 'SSPRK33_2', 'SSPRK33_3'};
+        % 'SSPRK33_1', 'SSPRK33_2a', 'SSPRK33_2b', 'SSPRK33_3a', 'SSPRK33_3b'};
+        % calc_curlB_rho = {'calc_curlB_rho_1_3args', 'calc_curlB_rho_2_3args', 'calc_curlB_rho_3_3args'};
+        RK_Step = [];
         if strcmp(I_IEq('hall_term'), 'USE_HALL')
-            calc_curlB_rho = {'calc_curlB_rho_1_3args', 'calc_curlB_rho_2_3args', 'calc_curlB_rho_3_3args'};
-        else
-            calc_curlB_rho = [];
+            RK_Step{end+1} = 'calc_curlB_rho_1_3args';
         end
-        if I_RunOps('variable_u') == 1
-            calc_u = repmat({'calc_u_3_args'}, size(RK_Step));
-        else
-            calc_u = [];
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
         end
-        tmp = [calc_curlB_rho; calc_u; RK_Step];
-        RK_Step = tmp(:)';
+        RK_Step{end+1} = 'SSPRK33_1';
+
+        RK_Step{end+1} = 'SSPRK33_2a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_2_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK33_2b';
+
+        RK_Step{end+1} = 'SSPRK33_3a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_3_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK33_3b';
+
         RK_Step{end+1} = 'calc_time_3_args';
+
         time_integrator_num_fields = 3;
 
     case 'SSPRK104'
 
-        RK_Step_1 = {'SSPRK104_01', 'SSPRK104_02', 'SSPRK104_03', 'SSPRK104_04', 'SSPRK104_05'};
-        RK_Step_2 = {'SSPRK104_07', 'SSPRK104_08', 'SSPRK104_09', 'SSPRK104_10', 'SSPRK104_11'};
+        RK_Step = [];
         if strcmp(I_IEq('hall_term'), 'USE_HALL')
-            calc_curlB_rho_1 = {'calc_curlB_rho_1_3args', 'calc_curlB_rho_2_3args', 'calc_curlB_rho_3_3args', ...
-                                'calc_curlB_rho_2_3args', 'calc_curlB_rho_3_3args'};
-            calc_curlB_rho_2 = {'calc_curlB_rho_2_3args', 'calc_curlB_rho_1_3args', 'calc_curlB_rho_2_3args', ...
-                                'calc_curlB_rho_1_3args', 'calc_curlB_rho_2_3args'};
-        else
-            calc_curlB_rho_1 = [];
-            calc_curlB_rho_2 = [];
+            RK_Step{end+1} = 'calc_curlB_rho_1_3args';
         end
         if I_RunOps('variable_u')
-            calc_u = repmat({'calc_u_3_args'}, size(RK_Step_1));
-        else
-            calc_u = [];
+            RK_Step{end+1} = 'calc_u_3_args';
         end
-        tmp = [calc_curlB_rho_1; calc_u; RK_Step_1];
-        RK_Step = tmp(:)';
+        RK_Step{end+1} = 'SSPRK104_01';
+
+        RK_Step{end+1} = 'SSPRK104_02a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_2_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_02b';
+
+        RK_Step{end+1} = 'SSPRK104_03a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_3_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_03b';
+
+        RK_Step{end+1} = 'SSPRK104_04a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_2_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_04b';
+
+        RK_Step{end+1} = 'SSPRK104_05a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_3_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_05b';
+
         RK_Step{end+1} = 'SSPRK104_06';
-        tmp = [calc_curlB_rho_2; calc_u; RK_Step_2];
-        RK_Step = [RK_Step, tmp(:)'];
+
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_2_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_07';
+
+        RK_Step{end+1} = 'SSPRK104_08a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_1_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_08b';
+
+        RK_Step{end+1} = 'SSPRK104_09a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_2_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_09b';
+
+        RK_Step{end+1} = 'SSPRK104_10a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_1_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_10b';
+
+        RK_Step{end+1} = 'SSPRK104_11a';
+        if strcmp(I_IEq('hall_term'), 'USE_HALL')
+            RK_Step{end+1} = 'calc_curlB_rho_2_3args';
+        end
+        if I_RunOps('variable_u')
+            RK_Step{end+1} = 'calc_u_3_args';
+        end
+        RK_Step{end+1} = 'SSPRK104_11b';
+
         RK_Step{end+1} = 'calc_time_3_args';
+
         time_integrator_num_fields = 3;
 
     case 'KennedyCarpenterLewis2R54C'

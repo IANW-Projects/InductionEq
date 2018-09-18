@@ -9,15 +9,9 @@ inline REAL4 high_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_f
 
 	uint idx = calc_idx(ix,iy,iz);
 
-  int bound_x = 0;
-  int bound_y = 0;
-  int bound_z = 0;
-
-  for (uint i = 0; i < NUM_BOUNDS; i++) {
-    bound_x = bound_x + (NUM_BOUNDS - i) * (check_bound_xr(ix, i + 1) - check_bound_l(ix, i + 1));
-    bound_y = bound_y + (NUM_BOUNDS - i) * (check_bound_yr(iy, i + 1) - check_bound_l(iy, i + 1));
-    bound_z = bound_z + (NUM_BOUNDS - i) * (check_bound_zr(iz, i + 1) - check_bound_l(iz, i + 1));
-  }
+  int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
 	REAL4 HO_diss = (REAL4) {0, 0, 0, 0};
 
@@ -38,15 +32,9 @@ inline REAL4 first_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_
 
 	uint idx = calc_idx(ix,iy,iz);
 
-	int bound_x = 0;
-	int bound_y = 0;
-	int bound_z = 0;
-
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		 bound_x = bound_x + (NUM_BOUNDS - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-		 bound_y = bound_y + (NUM_BOUNDS - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-		 bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	}
+	int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
 	REAL4 FO_diss = (REAL4) {0, 0, 0, 0};
   REAL4 tmp;
@@ -56,8 +44,8 @@ inline REAL4 first_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
 		tmp.xyz = tmp.xyz
       + fabs(SBP_diff[NUM_BOUNDS + bound_x][i])
-        * sigma(get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_u), get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * (get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_b).xyz - get_Field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
+        * sigma(get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_u), get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * (get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_b).xyz - get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
 	}
   FO_diss = FO_diss + tmp / (REAL)(DX);
 
@@ -66,8 +54,8 @@ inline REAL4 first_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
 		tmp.xyz = tmp.xyz
       + fabs(SBP_diff[NUM_BOUNDS + bound_y][i])
-        * sigma(get_Field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_u), get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * (get_Field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_b).xyz - get_Field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
+        * sigma(get_vector_field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_u), get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * (get_vector_field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_b).xyz - get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
 	}
   FO_diss = FO_diss + tmp / (REAL)(DY);
 
@@ -76,8 +64,8 @@ inline REAL4 first_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
 		tmp.xyz = tmp.xyz
       + fabs(SBP_diff[NUM_BOUNDS + bound_z][i])
-        * sigma(get_Field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_u), get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * (get_Field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_b).xyz - get_Field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
+        * sigma(get_vector_field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_u), get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * (get_vector_field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_b).xyz - get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
 	}
   FO_diss = FO_diss + tmp / (REAL)(DZ);
 
@@ -94,15 +82,9 @@ inline REAL4 adaptive_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_fie
 #ifdef USE_ADAPTIVE_DISSIPATION
 	uint idx = calc_idx(ix,iy,iz);
 
-	int bound_x = 0;
-	int bound_y = 0;
-	int bound_z = 0;
-
-	for (uint i = 0; i < NUM_BOUNDS; i++) {
-		 bound_x = bound_x + (NUM_BOUNDS - i)*(check_bound_xr(ix,i+1) - check_bound_l(ix,i+1));
-		 bound_y = bound_y + (NUM_BOUNDS - i)*(check_bound_yr(iy,i+1) - check_bound_l(iy,i+1));
-		 bound_z = bound_z + (NUM_BOUNDS - i)*(check_bound_zr(iz,i+1) - check_bound_l(iz,i+1));
-	}
+	int bound_x = get_bound_x(ix, NUM_BOUNDS);
+  int bound_y = get_bound_y(iy, NUM_BOUNDS);
+  int bound_z = get_bound_z(iz, NUM_BOUNDS);
 
 	// First order dissipation with adjusted weights
   REAL4 tmp;
@@ -110,12 +92,12 @@ inline REAL4 adaptive_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_fie
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
 		tmp.xyz = tmp.xyz
       + fabs(SBP_diff[NUM_BOUNDS + bound_x][i])
-        * kappa4(abs(i - (STENCIL_WIDTH - 1)/2), (REAL)DX, get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_b),
-                                                           get_Field(ix,iy,iz, 0, 0, 0, d_field_b),
-                                                           get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_u),
-                                                           get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * sigma(get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_u), get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * (get_Field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_b).xyz - get_Field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
+        * kappa4(abs(i - (STENCIL_WIDTH - 1)/2), (REAL)DX, get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_b),
+                                                           get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b),
+                                                           get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_u),
+                                                           get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * sigma(get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_u), get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * (get_vector_field(ix,iy,iz,(i - (STENCIL_WIDTH - 1)/2), 0, 0, d_field_b).xyz - get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
 	}
   AD_diss.xyz = AD_diss.xyz + tmp.xyz / (REAL)(DX);
 
@@ -123,12 +105,12 @@ inline REAL4 adaptive_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_fie
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
 		tmp.xyz = tmp.xyz
       + fabs(SBP_diff[NUM_BOUNDS + bound_y][i])
-        * kappa4(abs(i - (STENCIL_WIDTH - 1)/2), (REAL)DY, get_Field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_b),
-                                                           get_Field(ix,iy,iz, 0, 0, 0, d_field_b),
-                                                           get_Field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_u),
-                                                           get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * sigma(get_Field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_u), get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * (get_Field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_b).xyz - get_Field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
+        * kappa4(abs(i - (STENCIL_WIDTH - 1)/2), (REAL)DY, get_vector_field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_b),
+                                                           get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b),
+                                                           get_vector_field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_u),
+                                                           get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * sigma(get_vector_field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_u), get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * (get_vector_field(ix,iy,iz, 0,(i - (STENCIL_WIDTH - 1)/2), 0, d_field_b).xyz - get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
 	}
   AD_diss.xyz = AD_diss.xyz + tmp.xyz / (REAL)(DY);
 
@@ -136,32 +118,32 @@ inline REAL4 adaptive_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_fie
   for (uint i = 0; i < STENCIL_WIDTH; i++) {
 		tmp.xyz = tmp.xyz
       + fabs(SBP_diff[NUM_BOUNDS + bound_z][i])
-        * kappa4(abs(i - (STENCIL_WIDTH - 1)/2),(REAL)DZ, get_Field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_b),
-                                                          get_Field(ix,iy,iz, 0, 0, 0, d_field_b),
-                                                          get_Field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_u),
-                                                          get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * sigma(get_Field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_u), get_Field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
-        * (get_Field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_b).xyz - get_Field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
+        * kappa4(abs(i - (STENCIL_WIDTH - 1)/2),(REAL)DZ, get_vector_field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_b),
+                                                          get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b),
+                                                          get_vector_field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_u),
+                                                          get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * sigma(get_vector_field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_u), get_vector_field(ix,iy,iz, 0, 0, 0, d_field_u)).xyz
+        * (get_vector_field(ix,iy,iz, 0, 0,(i - (STENCIL_WIDTH - 1)/2), d_field_b).xyz - get_vector_field(ix,iy,iz, 0, 0, 0, d_field_b).xyz);
 	}
   AD_diss.xyz = AD_diss.xyz + tmp.xyz / (REAL)(DZ);
 
 	// High order dissipation with adjusted weights
 	for( int term = -STENCIL_WIDTH_HOD + 1; term <= 0; term++) {
 		AD_diss.xyz = AD_diss.xyz
-      + (1 - kappa4(1, (REAL)DX, get_Field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 1, 0, 0, d_field_b),
-                                 get_Field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 2, 0, 0, d_field_b),
-                                 get_Field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 1, 0, 0, d_field_u),
-                                 get_Field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 2, 0, 0, d_field_u)).xyz)
+      + (1 - kappa4(1, (REAL)DX, get_vector_field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 1, 0, 0, d_field_b),
+                                 get_vector_field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 2, 0, 0, d_field_b),
+                                 get_vector_field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 1, 0, 0, d_field_u),
+                                 get_vector_field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 2, 0, 0, d_field_u)).xyz)
         * diff_HOD_x(ix, iy, iz, bound_x, term, d_field_b).xyz
-      + (1 - kappa4(1, (REAL)DY, get_Field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 1, 0, d_field_b),
-                                 get_Field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 2, 0, d_field_b),
-                                 get_Field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 1, 0, d_field_u),
-                                 get_Field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 2, 0, d_field_u)).xyz)
+      + (1 - kappa4(1, (REAL)DY, get_vector_field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 1, 0, d_field_b),
+                                 get_vector_field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 2, 0, d_field_b),
+                                 get_vector_field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 1, 0, d_field_u),
+                                 get_vector_field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 2, 0, d_field_u)).xyz)
         * diff_HOD_y(ix, iy, iz, bound_y, term, d_field_b).xyz
-      + (1 - kappa4(1, (REAL)DZ, get_Field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 1, d_field_b),
-                                 get_Field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 2, d_field_b),
-                                 get_Field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 1, d_field_u),
-                                 get_Field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 2, d_field_u)).xyz)
+      + (1 - kappa4(1, (REAL)DZ, get_vector_field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 1, d_field_b),
+                                 get_vector_field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 2, d_field_b),
+                                 get_vector_field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 1, d_field_u),
+                                 get_vector_field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 2, d_field_u)).xyz)
         * diff_HOD_z(ix, iy, iz, bound_z, term, d_field_b).xyz;
 	}
 
