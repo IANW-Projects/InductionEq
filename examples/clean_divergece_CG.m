@@ -71,8 +71,12 @@ end
 I_RunOps('order') = 4; %TODO: extended or classical
 %I_RunOps('testcase') = 'rotation_2D'; %TODO: Implement testcases for
 %divergence cleaning
-% Optional plotting parameters. If set to 1 a 2D plot of the corresponding
-% quantity will be generated
+
+% Optional plotting parameters (2D plots). 
+% Choose the cross section with
+% 'x', 'y', 'z'
+% If you want to plot multiple cross sections use
+% 'xy', 'xz', 'yz', 'xyz'
 I_RunOps('plot_field_b') = 0;
 I_RunOps('plot_divergence') = 0;
 I_RunOps('plot_phi') = 0;

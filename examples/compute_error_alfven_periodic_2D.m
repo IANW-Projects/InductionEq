@@ -59,7 +59,7 @@ I_TI('time_integrator') = 'CarpenterKennedy2N54';
 
 
 % Induction equation related variables
-%Specify how the three part of the linear induction equation shall be
+%Specify how the three parts of the linear induction equation shall be
 %computed. 
 I_IEq('form_uibj') = 'USE_UIBJ_PRODUCT'; % PRODUCT, SPLIT, CENTRAL
 I_IEq('form_source') = 'USE_SOURCE_CENTRAL'; % CENTRAL, SPLIT, ZERO
@@ -109,7 +109,7 @@ end
 
 % Options relevant for a run
 % Defines the order 
-I_RunOps('order') = 4; % 2, 4, 6
+I_RunOps('order') = 2; % 2, 4, 6
 % Specify the testcase. The name of the testcase has to be equal to the
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:
@@ -118,8 +118,11 @@ I_RunOps('testcase') = 'alfven_periodic_2D';
 I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
 I_RunOps('periodic') = 'USE_PERIODIC'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
                                        % if periodic boundary conditions should be used
-% Optional plotting parameters. If set to 1 a 2D plot of the corresponding
-% quantity will be generated
+% Optional plotting parameters (2D plots). 
+% Choose the cross section with
+% 'x', 'y', 'z'
+% If you want to plot multiple cross sections use
+% 'xy', 'xz', 'yz', 'xyz'
 I_RunOps('plot_numerical_solution') = 0;
 I_RunOps('plot_analytical_solution') = 0;
 I_RunOps('plot_difference') = 0;

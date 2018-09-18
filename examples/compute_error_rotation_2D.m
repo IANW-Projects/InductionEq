@@ -118,12 +118,15 @@ I_RunOps('testcase') = 'rotation_2D';
 I_RunOps('variable_u') = false; % must be set to true if a variable velocity is used
 I_RunOps('periodic') = 'NONE'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
                                        % if periodic boundary conditions should be used
-% Optional plotting parameters. If set to 1 a 2D plot of the corresponding
-% quantity will be generated
-I_RunOps('plot_numerical_solution') = 0;
-I_RunOps('plot_analytical_solution') = 0;
-I_RunOps('plot_difference') = 0;
-I_RunOps('plot_divergence') = 0;
+% Optional plotting parameters (2D plots). 
+% Choose the cross section with
+% 'x', 'y', 'z'
+% If you want to plot multiple cross sections use
+% 'xy', 'xz', 'yz', 'xyz'
+I_RunOps('plot_numerical_solution') = 'xyz';
+I_RunOps('plot_analytical_solution') = 'xyz';
+I_RunOps('plot_difference') = 'xyz';
+I_RunOps('plot_divergence') = 'xyz';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
 
