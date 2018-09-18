@@ -34,8 +34,9 @@ function [] = prepare_vars()
     valueSet = {0 0 '' 0 0};
     I_TI = containers.Map(keySet, valueSet,'UniformValues',false);
 
-    keySet = {'form_uibj', 'form_source', 'form_ujbi', 'dissipation', 'dissipation_form', 'hall_term', 'g_range', 'l_range', 'MP2MIN', 'MP2MAX', 'CMIN', 'CMAX'};
-    valueSet = {'' '' '' 0 '' '' 0 0 0 0 0 0};
+    keySet = {'form_uibj', 'form_source', 'form_ujbi', 'dissipation', 'dissipation_form', 'HO_DISSIPATION_FACTOR', ...
+              'hall_term', 'g_range', 'l_range', 'MP2MIN', 'MP2MAX', 'CMIN', 'CMAX'};
+    valueSet = {'' '' '' 'NONE' '' 1 'NONE' 0 0 0 0 0 0};
     I_IEq = containers.Map(keySet, valueSet,'UniformValues',false);
 
     keySet = {'use', 'form', 'BNODES', 'error_threshold', 'g_range', 'l_range','max_iterations'};

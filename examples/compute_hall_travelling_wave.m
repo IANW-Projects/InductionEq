@@ -68,7 +68,9 @@ I_IEq('hall_term') = 'USE_HALL'; % NONE, USE_HALL
 %Enable or disable artificial dissipation
 I_IEq('dissipation') = 'NONE'; % NONE, USE_ARTIFICIAL_DISSIPATION
 %Specify what kind of artifical dissipation shall be used
-I_IEq('dissipation_form') = 'USE_HIGH_ORDER_DISSIPATION'; %USE_ADAPTIVE_DISSIPATION USE_FIRST_ORDER_DISSIPATION USE_HIGH_ORDER_DISSIPATION
+    %USE_ADAPTIVE_DISSIPATION, USE_FIRST_ORDER_DISSIPATION, USE_HIGH_ORDER_DISSIPATION
+I_IEq('dissipation_form') = 'USE_HIGH_ORDER_DISSIPATION';
+I_IEq('HO_DISSIPATION_FACTOR') = 1; % a constant (non-negative) factor adapting the influence of the high order dissipation
 %Additional parameters needed for adaptive dissipation. For typical values
 %see (add reference)
 I_IEq('MP2MIN') = 1;
@@ -121,10 +123,10 @@ I_RunOps('periodic') = 'NONE'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PER
 % 'x', 'y', 'z'
 % If you want to plot multiple cross sections use
 % 'xy', 'xz', 'yz', 'xyz'
-I_RunOps('plot_numerical_solution') = 0;
-I_RunOps('plot_analytical_solution') = 0;
-I_RunOps('plot_difference') = 0;
-I_RunOps('plot_divergence') = 0;
+I_RunOps('plot_numerical_solution') = '';
+I_RunOps('plot_analytical_solution') = '';
+I_RunOps('plot_difference') = '';
+I_RunOps('plot_divergence') = '';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
 
