@@ -8,3 +8,6 @@ matlab/cl_run_kernel.mexa64
 matlab/*.m~
 matlab/*/*.m~
 examples/*.m~
+
+# temporary files for jupyter/ipython notebooks
+docs/.ipynb_checkpoints/
