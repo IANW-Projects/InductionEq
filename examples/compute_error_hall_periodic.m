@@ -41,7 +41,8 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % Mesh related parameters. The minimum number of nodes per direction is
 % constrained by the number of boundary nodes, e.g. the 4th order method 
 % has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
-N = uint32(120); I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
+N = uint32(40); 
+I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
 I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 4*pi/3;
 I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 4*pi/3;
 I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 4*pi/3;
@@ -122,7 +123,7 @@ I_RunOps('plot_analytical_solution') = 0;
 I_RunOps('plot_difference') = 0;
 I_RunOps('plot_divergence') = 0;
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
-I_RunOps('save_fields') = true;
+I_RunOps('save_fields') = false;
 
 %Initialize the magnetic field, the velocity field and the density field
 %according to the specified testcase. Also calculates and sets additional

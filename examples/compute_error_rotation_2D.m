@@ -41,7 +41,8 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % Mesh related parameters. The minimum number of nodes per direction is
 % constrained by the number of boundary nodes, e.g. the 4th order method 
 % has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
-N = uint32(40); I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = uint32(12);
+N = uint32(40);
+I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = uint32(12);
 I_Mesh('XMIN') = -1.0; I_Mesh('XMAX') = 1.0;
 I_Mesh('YMIN') = -1.0; I_Mesh('YMAX') = 1.0;
 I_Mesh('ZMIN') = -1.0; I_Mesh('ZMAX') = 1.0;
