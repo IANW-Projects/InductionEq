@@ -40,7 +40,7 @@ function [field_b_init, DC_fields] = initialize()
         end
     end
     group_size = double(group_size);
-    num_nodes_pad = ceil(num_nodes/group_size)*group_size;
+    num_nodes_pad = ceil(double(num_nodes)/group_size)*group_size;
     num_groups = ceil(num_nodes_pad/group_size);
 
     I_Tech('num_nodes_pad') = num_nodes_pad;
