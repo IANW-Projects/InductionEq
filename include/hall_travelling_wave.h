@@ -23,7 +23,10 @@ inline REAL4 b_analytical(uint ix, uint iy, uint iz, REAL time) {
                   - CONST_k*CONST_k * CONST_Bz*CONST_Bz)
               / (CONST_Bz * (CONST_k*CONST_uz - CONST_omega) * CONST_k*CONST_k);
 
-	return (REAL4) {CONST_B0*cos(Omega*xi), CONST_B0*sin(Omega*xi), CONST_Bz, 0};
+	return (REAL4) {CONST_B0*cos(Omega*xi),
+                  CONST_B0*sin(Omega*xi),
+                  CONST_Bz,
+                  0};
 }
 
 /*
@@ -70,9 +73,12 @@ inline REAL4 u_analytical(uint ix, uint iy, uint iz, REAL time) {
   REAL Omega = ( (CONST_k * CONST_uz - CONST_omega)*(CONST_k * CONST_uz - CONST_omega)
                   - CONST_k*CONST_k * CONST_Bz*CONST_Bz)
               / (CONST_Bz * (CONST_k*CONST_uz - CONST_omega) * CONST_k*CONST_k);
-  REAL fac = CONST_k * CONST_Bz / (CONST_k*CONST_uz - Omega);
+  REAL fac = CONST_k * CONST_Bz / (CONST_k*CONST_uz - CONST_omega);
 
-	return (REAL4) {fac*CONST_B0*cos(Omega*xi) + CONST_ux, fac*CONST_B0*sin(Omega*xi) + CONST_uy, CONST_uz, 0};
+	return (REAL4) {fac*CONST_B0*cos(Omega*xi) + CONST_ux,
+                  fac*CONST_B0*sin(Omega*xi) + CONST_uy,
+                  CONST_uz,
+                  0};
 }
 
 /*
