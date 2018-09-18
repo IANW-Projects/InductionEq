@@ -88,7 +88,7 @@ end
 if strcmp(I_IEq('dissipation'), 'USE_ARTIFICIAL_DISSIPATION')
     kernel_path_list = [kernel_path_list, {'../include/artificial_dissipation.h'}];
     kernel_path_list = [kernel_path_list, {'../kernel/artificial_dissipation.cl'}];
-    settings_dissipation = generate_settings(I_IEq, {'dissipation', 'dissipation_form'});
+    settings_dissipation = generate_settings(I_IEq, {'dissipation', 'dissipation_form', 'HO_DISSIPATION_FACTOR'});
 
     if strcmp(I_IEq('dissipation_form'),'USE_ADAPTIVE_DISSIPATION')
         settings_dissipation = strcat(settings_dissipation, generate_settings(I_IEq, {'MP2MIN'; 'MP2MAX'; 'CMIN'; 'CMAX'}));

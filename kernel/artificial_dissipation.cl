@@ -4,6 +4,11 @@
 // Artifical Dissipation
 //--------------------------------------------------------------------------------------------------
 
+// a constant (non-negative) factor adapting the influence of the high order dissipation
+#ifndef HO_DISSIPATION_FACTOR
+#define HO_DISSIPATION_FACTOR 1
+#endif
+
 // Computes the high order dissipation for the vector type field `d_field_b` at point (ix, iy, iz)
 inline REAL4 high_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_field_b) {
 
@@ -16,9 +21,9 @@ inline REAL4 high_order_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_f
 	REAL4 HO_diss = (REAL4) {0, 0, 0, 0};
 
 	for (int i = -STENCIL_WIDTH_HOD + 1; i < 1; i++) {
-		HO_diss = HO_diss + diff_HOD_x(ix, iy, iz, bound_x, i, d_field_b)
-                      + diff_HOD_y(ix, iy, iz, bound_y, i, d_field_b)
-                      + diff_HOD_z(ix, iy, iz, bound_z, i, d_field_b);
+		HO_diss = HO_diss + (REAL)(HO_DISSIPATION_FACTOR) * diff_HOD_x(ix, iy, iz, bound_x, i, d_field_b)
+                      + (REAL)(HO_DISSIPATION_FACTOR) * diff_HOD_y(ix, iy, iz, bound_y, i, d_field_b)
+                      + (REAL)(HO_DISSIPATION_FACTOR) * diff_HOD_z(ix, iy, iz, bound_z, i, d_field_b);
 	}
 
 	HO_diss.w = 0;
@@ -134,17 +139,17 @@ inline REAL4 adaptive_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_fie
                                  get_vector_field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 2, 0, 0, d_field_b),
                                  get_vector_field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 1, 0, 0, d_field_u),
                                  get_vector_field(ix,iy,iz,term + STENCIL_WIDTH_HOD - 2, 0, 0, d_field_u)).xyz)
-        * diff_HOD_x(ix, iy, iz, bound_x, term, d_field_b).xyz
+        * (REAL)(HO_DISSIPATION_FACTOR) * diff_HOD_x(ix, iy, iz, bound_x, term, d_field_b).xyz
       + (1 - kappa4(1, (REAL)DY, get_vector_field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 1, 0, d_field_b),
                                  get_vector_field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 2, 0, d_field_b),
                                  get_vector_field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 1, 0, d_field_u),
                                  get_vector_field(ix,iy,iz, 0,term + STENCIL_WIDTH_HOD - 2, 0, d_field_u)).xyz)
-        * diff_HOD_y(ix, iy, iz, bound_y, term, d_field_b).xyz
+        * (REAL)(HO_DISSIPATION_FACTOR) * diff_HOD_y(ix, iy, iz, bound_y, term, d_field_b).xyz
       + (1 - kappa4(1, (REAL)DZ, get_vector_field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 1, d_field_b),
                                  get_vector_field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 2, d_field_b),
                                  get_vector_field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 1, d_field_u),
                                  get_vector_field(ix,iy,iz, 0, 0,term + STENCIL_WIDTH_HOD - 2, d_field_u)).xyz)
-        * diff_HOD_z(ix, iy, iz, bound_z, term, d_field_b).xyz;
+        * (REAL)(HO_DISSIPATION_FACTOR) * diff_HOD_z(ix, iy, iz, bound_z, term, d_field_b).xyz;
 	}
 
 	AD_diss.w = 0;

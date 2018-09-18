@@ -26,7 +26,6 @@ function [] = prepare_vars()
     valueSet = {0 0 0 0 0 0 0 0 0 0 0 0};
     I_Mesh = containers.Map(keySet, valueSet);
 
-
     keySet = {'form', 'BNODES', 'absolute_error_threshold', 'g_range', 'l_range','max_iterations'};
     valueSet = {'' 0 0 0 0 0};
     I_DC = containers.Map(keySet, valueSet,'UniformValues',false);
