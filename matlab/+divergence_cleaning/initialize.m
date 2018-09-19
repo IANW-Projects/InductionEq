@@ -119,15 +119,30 @@ function [field_b_init, DC_fields] = initialize()
                        'output', output);
 
     kernel_path_list =  {};
+
+    % Include header file containing the coefficients of the respective order
     if I_RunOps('order') == 2
-        kernel_path_list = [kernel_path_list, {'../include/2ndOrder.h'}];
+        if strcmp(I_RunOps('operator_form'), 'extended')
+            kernel_path_list = [kernel_path_list, {'../include/2ndOrderExtended.h'}];
+        else % classical operators
+            kernel_path_list = [kernel_path_list, {'../include/2ndOrder.h'}];
+        end
     elseif I_RunOps('order') == 4
-        kernel_path_list = [kernel_path_list, {'../include/4thOrder.h'}];
+        if strcmp(I_RunOps('operator_form'), 'extended')
+            kernel_path_list = [kernel_path_list, {'../include/4thOrderExtended.h'}];
+        else % classical operators
+            kernel_path_list = [kernel_path_list, {'../include/4thOrder.h'}];
+        end
     elseif I_RunOps('order') == 6
-        kernel_path_list = [kernel_path_list, {'../include/6thOrder.h'}];
+        if strcmp(I_RunOps('operator_form'), 'extended')
+            kernel_path_list = [kernel_path_list, {'../include/6thOrderExtended.h'}];
+        else % classical operators
+            kernel_path_list = [kernel_path_list, {'../include/6thOrder.h'}];
+        end
     else
         fprintf('Specify order \n')
     end
+
     kernel_path_list = [kernel_path_list, {'../include/utils.h'}];
     kernel_path_list = [kernel_path_list, {'../kernel/SBP_operator.cl'}];
     kernel_path_list = [kernel_path_list, {'../kernel/kernel_operator.cl'}];
