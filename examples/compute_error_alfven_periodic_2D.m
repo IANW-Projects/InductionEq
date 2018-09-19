@@ -110,7 +110,8 @@ end
 
 % Options relevant for a run
 % Defines the order 
-I_RunOps('order') = 2; % 2, 4, 6
+I_RunOps('order') = 4; % 2, 4, 6
+I_RunOps('operator_form') = 'classical'; % 'classical' or 'extended' operators
 % Specify the testcase. The name of the testcase has to be equal to the
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:

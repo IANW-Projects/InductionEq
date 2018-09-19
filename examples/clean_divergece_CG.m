@@ -68,7 +68,8 @@ end
 
 % Option relevant for run
 % Defines the order 
-I_RunOps('order') = 4; %TODO: extended or classical
+I_RunOps('order') = 4; % 2, 4, 6
+I_RunOps('operator_form') = 'classical'; % 'classical' or 'extended' operators
 %I_RunOps('testcase') = 'rotation_2D'; %TODO: Implement testcases for
 %divergence cleaning
 
