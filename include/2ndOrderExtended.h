@@ -94,6 +94,9 @@ REAL constant SBP_laplace_WS_D0[2*NUM_BOUNDS_LAPLACE_WS_D0+1][STENCIL_WIDTH_LAPL
 
 // coefficients for the narrow stencil operator using homogeneous Dirichlet boundary conditions
 // have not been derived
+#ifdef USE_LAPLACE_NARROW_STENCIL_DIRICHLET
+#error "Error in include/2ndOrderExtended.h: Coefficients of the narrow stencil operator using homogeneous Dirichlet boundary conditions have not been derived."
+#endif
 
 // coefficients for the wide stencil operator using the least norm solution
 #define NUM_BOUNDS_LAPLACE_WS_LN 4
