@@ -47,12 +47,12 @@ function [] = prepare_vars()
     valueSet = {0 '' 0 0 0 0 0 ''};
     I_Tech = containers.Map(keySet, valueSet,'UniformValues',false);
 
-    keySet = {'order', 'operator_form', 'testcase', 'variable_u', 'periodic', 'plot_energy', 'plot_numerical_solution', 'plot_analytical_solution', 'plot_difference', 'plot_divergence', 'save_fields'};
-    valueSet = {0 'classical' '' false 'NONE' 0 0 0 0 0 false};
+    keySet = {'order', 'operator_form', 'testcase', 'variable_u', 'periodic', 'plot_energy', 'plot_numerical_solution', 'plot_analytical_solution', 'plot_difference', 'plot_divergence', 'save_fields', 'save_energy_over_time'};
+    valueSet = {0 'classical' '' false 'NONE' 0 0 0 0 0 false false};
     I_RunOps = containers.Map(keySet, valueSet,'UniformValues',false);
 
-    keySet = {'abs_err', 'rel_err', 'field_b', 'field_b_ana', 'energy', 'divergence_norm', 'runtime', 'kernel_runtime'};
-    valueSet = {0 0 0 0 0 0 0 0};
+    keySet = {'abs_err', 'rel_err', 'field_b', 'field_b_ana', 'energy', 'divergence_norm', 'runtime', 'kernel_runtime' 'energy_over_time'};
+    valueSet = {0 0 0 0 0 0 0 0 0};
     I_Results = containers.Map(keySet, valueSet,'UniformValues',false);
 
 end

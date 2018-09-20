@@ -25,7 +25,7 @@ addpath('../matlab')
 %I_Tech: Contains all variables of technical nature, e.g. the device,
 %computation precision
 %I_RunOps: Specifies the parameters of a computation, e.g. which variables
-%will be saved, the testcase 
+%will be saved, the testcase
 
 %Variables in capital letters are program specific defines which are set by
 %openCL compile settings. If the value is a string in captial letters
@@ -39,9 +39,9 @@ induction_eq.prepare_vars();
 global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 
 % Mesh related parameters. The minimum number of nodes per direction is
-% constrained by the number of boundary nodes, e.g. the 4th order method 
-% has 2*4 boundary nodes which means the minimum number of nodes amounts to 8. 
-N = uint32(40); 
+% constrained by the number of boundary nodes, e.g. the 4th order method
+% has 2*4 boundary nodes which means the minimum number of nodes amounts to 8.
+N = uint32(40);
 I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
 I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 4*pi/3;
 I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 4*pi/3;
@@ -59,7 +59,7 @@ I_TI('time_integrator') = 'CarpenterKennedy2N54';
 
 % Induction equation related variables
 %Specify how the three part of the linear induction equation shall be
-%computed. 
+%computed.
 I_IEq('form_uibj') = 'USE_UIBJ_PRODUCT'; % PRODUCT, SPLIT, CENTRAL
 I_IEq('form_source') = 'USE_SOURCE_CENTRAL'; % CENTRAL, SPLIT, ZERO
 I_IEq('form_ujbi') = 'USE_UJBI_CENTRAL'; % SPLIT, CENTRAL, PRODUCT
@@ -108,7 +108,7 @@ else
 end
 
 % Option relevant for run
-% Defines the order 
+% Defines the order
 I_RunOps('order') = 4; % 2, 4, 6
 I_RunOps('operator_form') = 'classical'; % 'classical' or 'extended' operators
 % Specify the testcase. The name of the testcase has to be equal to the
@@ -119,7 +119,7 @@ I_RunOps('testcase') = 'hall_periodic';
 I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
 I_RunOps('periodic') = 'USE_PERIODIC'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
                                        % if periodic boundary conditions should be used
-% Optional plotting parameters (2D plots). 
+% Optional plotting parameters (2D plots).
 % Choose the cross section with
 % 'x', 'y', 'z'
 % If you want to plot multiple cross sections use
@@ -130,6 +130,8 @@ I_RunOps('plot_difference') = '';
 I_RunOps('plot_divergence') = '';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
+%If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time')
+I_RunOps('save_energy_over_time') = false;
 
 %Initialize the magnetic field, the velocity field and the density field
 %according to the specified testcase. Also calculates and sets additional
@@ -139,7 +141,7 @@ I_RunOps('save_fields') = false;
 fprintf('Testcase: %s \nOrder: %d \nTime integrator: %s\nDT: %.16e   N_STEPS: %5d   FINAL_TIME: %.16e\nDX: %.16e   NODES_X: %5d\nDY: %.16e   NODES_Y: %5d\nDZ: %.16e   NODES_Z: %5d\nDissipation: %s \nDivergence cleaning: %d \nREAL: %s\n',...
         I_RunOps('testcase'), I_RunOps('order'), I_TI('time_integrator'), I_TI('DT'), I_TI('num_steps'), I_TI('final_time'), I_Mesh('DX'), I_Mesh('NODES_X'), I_Mesh('DY'), I_Mesh('NODES_Y'), I_Mesh('DZ'), I_Mesh('NODES_Z'), I_IEq('dissipation'), I_DC('divergence_cleaning'), I_Tech('REAL'));
 %%
-%Takes the initialized fields and advances the solution in time 
+%Takes the initialized fields and advances the solution in time
 induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
 
 fprintf('Divergence Norm: %.15e    Total Energy: %.15e\nRelative Error: %.15f %%\n\n', ...
