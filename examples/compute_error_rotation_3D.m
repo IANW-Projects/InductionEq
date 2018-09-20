@@ -115,7 +115,7 @@ I_RunOps('operator_form') = 'classical'; % 'classical' or 'extended' operators
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:
 % rotation_2D, rotation_3D, alfven_periodic_2D, hall_travelling_wave, hall_periodic
-I_RunOps('testcase') = 'rotation_2D';
+I_RunOps('testcase') = 'rotation_3D';
 I_RunOps('variable_u') = false; % must be set to true if a variable velocity is used
 I_RunOps('periodic') = 'NONE'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
                                        % if periodic boundary conditions should be used
