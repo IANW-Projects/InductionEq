@@ -42,9 +42,9 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % constrained by the number of boundary nodes, e.g. the 4th order method
 % has 2*4 boundary nodes which means the minimum number of nodes amounts to 8.
 I_Mesh('NODES_X') = uint32(12); I_Mesh('NODES_Y') = uint32(12); I_Mesh('NODES_Z') = uint32(80);
-I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 150.0; 
+I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 150.0;
 I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 150.0;
-I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 5*(2*pi) / (19/90); % the solution is periodic with period 
+I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 5*(2*pi) / (19/90); % the solution is periodic with period
                                                            % (2*pi) / (19/90) in z direction
 
 % Time integration related variables
@@ -118,7 +118,7 @@ I_RunOps('testcase') = 'hall_travelling_wave';
 I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
 I_RunOps('periodic') = 'USE_PERIODIC'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
                                        % if periodic boundary conditions should be used
-% Optional plotting parameters (2D plots). 
+% Optional plotting parameters (2D plots).
 % Choose the cross section with
 % 'x', 'y', 'z'
 % If you want to plot multiple cross sections use
@@ -129,6 +129,8 @@ I_RunOps('plot_difference') = '';
 I_RunOps('plot_divergence') = '';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
+%If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time')
+I_RunOps('save_energy_over_time') = false;
 
 %Initialize the magnetic field, the velocity field and the density field
 %according to the specified testcase. Also calculates and sets additional

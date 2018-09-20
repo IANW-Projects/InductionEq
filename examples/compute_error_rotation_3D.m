@@ -130,6 +130,8 @@ I_RunOps('plot_difference') = '';
 I_RunOps('plot_divergence') = '';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
+%If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time')
+I_RunOps('save_energy_over_time') = false;
 
 %Initialize the magnetic field, the velocity field and the density field
 %according to the specified testcase. Also calculates and sets additional

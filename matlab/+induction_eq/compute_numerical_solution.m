@@ -12,6 +12,10 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % Initialise logging variables
 kernel_runtime = 0;
 RK_block_size = 15000;
+if I_RunOps('save_energy_over_time')
+  energy = IEq_fields.energy;
+end
+norm2_output = IEq_fields.norm2_output;
 
 % Compile kernel
 [~] = cl_run_kernel(I_Tech('device'), kernel_path_list, settings);
@@ -28,13 +32,24 @@ switch time_integrator_num_fields
         current_time = IEq_fields.current_time;
 
         if I_DC('divergence_cleaning')
-            for i = 1:I_TI('num_steps')
+            for step = 1:I_TI('num_steps')
                 t = cl_run_kernel(I_Tech('device'), RK_Step, I_IEq('g_range'), I_IEq('l_range'), ...
                                   field_b, field_b2, field_curlB_rho, ...
-                                  field_u, field_rho, current_time, [0 0 0 0 0]);
+                                  field_u, field_rho, current_time, 0);
                 kernel_runtime = kernel_runtime + t;
 
                 [field_b] = induction_eq.clean_div(field_b, DC_fields);
+            end
+        elseif I_RunOps('save_energy_over_time')
+            for step = 1:I_TI('num_steps')
+                norm2_output(:) = 0;
+                cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), field_b, norm2_output, 0);
+                energy(step) = sum(norm2_output);
+
+                t = cl_run_kernel(I_Tech('device'), RK_Step, I_IEq('g_range'), I_IEq('l_range'), ...
+                                  field_b, field_b2, field_curlB_rho, ...
+                                  field_u, field_rho, current_time, 0);
+                kernel_runtime = kernel_runtime + t;
             end
         else % I_DC('divergence_cleaning') == false
             num_steps_run = I_TI('num_steps');
@@ -43,7 +58,7 @@ switch time_integrator_num_fields
 
                 t = cl_run_kernel(I_Tech('device'), kernel_list, I_IEq('g_range'), I_IEq('l_range'), ...
                                   field_b, field_b2, field_curlB_rho, ...
-                                  field_u, field_rho, current_time, [0 0 0 0 0]);
+                                  field_u, field_rho, current_time, 0);
                 kernel_runtime =  kernel_runtime + t;
                 num_steps_run = num_steps_run - RK_block_size;
             end
@@ -52,7 +67,7 @@ switch time_integrator_num_fields
 
                 t = cl_run_kernel(I_Tech('device'), kernel_list, I_IEq('g_range'), I_IEq('l_range'), ...
                                   field_b, field_b2, field_curlB_rho, ...
-                                  field_u, field_rho, current_time, [0 0 0 0 0]);
+                                  field_u, field_rho, current_time, 0);
                 kernel_runtime = kernel_runtime + t;
             end
         end
@@ -67,14 +82,25 @@ switch time_integrator_num_fields
         current_time = IEq_fields.current_time;
 
         if I_DC('divergence_cleaning')
-            for i = 1:I_TI('num_steps')
+            for step = 1:I_TI('num_steps')
                 t = cl_run_kernel(I_Tech('device'), RK_Step, I_IEq('g_range'), I_IEq('l_range'), ...
                                   field_b, field_b2, field_b3, field_curlB_rho, ...
-                                  field_u, field_rho, current_time, [0 0 0 0 0]);
+                                  field_u, field_rho, current_time, 0);
                 kernel_runtime = kernel_runtime + t;
 
                 [field_b] = induction_eq.clean_div(field_b, DC_fields);
             end
+        elseif I_RunOps('save_energy_over_time')
+              for step = 1:I_TI('num_steps')
+                  t = cl_run_kernel(I_Tech('device'), RK_Step, I_IEq('g_range'), I_IEq('l_range'), ...
+                                    field_b, field_b2, field_b3, field_curlB_rho, ...
+                                    field_u, field_rho, current_time, 0);
+                  kernel_runtime = kernel_runtime + t;
+
+                  norm2_output(:) = 0;
+                  cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), field_b, norm2_output, 0);
+                  energy(step) = sum(norm2_output);
+              end
         else % I_DC('divergence_cleaning') == false
             num_steps_run = I_TI('num_steps');
             while num_steps_run > RK_block_size
@@ -82,7 +108,7 @@ switch time_integrator_num_fields
 
                 t = cl_run_kernel(I_Tech('device'), kernel_list, I_IEq('g_range'), I_IEq('l_range'), ...
                                   field_b, field_b2, field_b3, field_curlB_rho, ...
-                                  field_u, field_rho, current_time, [0 0 0 0 0]);
+                                  field_u, field_rho, current_time, 0);
                 kernel_runtime =  kernel_runtime + t;
                 num_steps_run = num_steps_run - RK_block_size;
             end
@@ -91,7 +117,7 @@ switch time_integrator_num_fields
 
                 t = cl_run_kernel(I_Tech('device'), kernel_list, I_IEq('g_range'), I_IEq('l_range'), ...
                                   field_b, field_b2, field_b3, field_curlB_rho, ...
-                                  field_u, field_rho, current_time, [0 0 0 0 0]);
+                                  field_u, field_rho, current_time, 0);
                 kernel_runtime = kernel_runtime + t;
             end
         end
@@ -113,11 +139,10 @@ end
 
 field_b_ana = IEq_fields.field_b2;
 field_divB = IEq_fields.field_divB;
-norm2_output = IEq_fields.norm2_output;
 
 %Calculate analytical solution and error
 current_time(1) = I_TI('final_time');
-cl_run_kernel(I_Tech('device'), 'analytical_b', I_IEq('g_range'), I_IEq('l_range'), field_b_ana, current_time,0);
+cl_run_kernel(I_Tech('device'), 'analytical_b', I_IEq('g_range'), I_IEq('l_range'), field_b_ana, current_time, 0);
 
 norm2_output(:) = 0;
 cl_run_kernel(I_Tech('device'), 'norm2_diff', I_Tech('g_range'), I_Tech('l_range'), field_b, field_b_ana, norm2_output, 0);
@@ -141,6 +166,11 @@ I_Results('divergence_norm') = sqrt(sum(norm2_output));
 norm2_output(:) = 0;
 cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), field_b, norm2_output, 0);
 I_Results('energy') = sum(norm2_output);
+energy(I_TI('num_steps')+1) = I_Results('energy');
+if I_RunOps('save_energy_over_time')
+    I_Results('energy_over_time') = energy;
+end
+
 
 %Optional plots
 if ismember(lower(char(I_RunOps('plot_numerical_solution'))),{'x','y','z','xy', 'xz', 'yz', 'xyz'})
