@@ -49,7 +49,7 @@ I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 4*pi/3;
 
 % Time integration related variables
 I_TI('cfl') = 2/double(N); %Define the Courant–Friedrichs–Lewy condition
-I_TI('final_time') = 0.1;
+I_TI('final_time') = 1.0;
 %Chose the time integrator. Below is a list of up to date available
 %options:
 % SSPRK33, SSPRK104,

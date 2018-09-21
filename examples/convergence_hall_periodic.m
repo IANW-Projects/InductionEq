@@ -20,7 +20,7 @@ I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 4*pi/3;
 I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 4*pi/3;
 
 % Time integration related variables
-I_TI('cfl') = 2/double(N); %Define the Courant–Friedrichs–Lewy condition
+I_TI('cfl') = 1/double(N); %Define the Courant–Friedrichs–Lewy condition
 I_TI('final_time') = 1.0;
 %Chose the time integrator. Below is a list of up to date available
 %options:
@@ -36,7 +36,7 @@ I_IEq('form_uibj') = 'USE_UIBJ_PRODUCT'; % PRODUCT, SPLIT, CENTRAL
 I_IEq('form_source') = 'USE_SOURCE_CENTRAL'; % CENTRAL, SPLIT, ZERO
 I_IEq('form_ujbi') = 'USE_UJBI_CENTRAL'; % SPLIT, CENTRAL, PRODUCT
 %Enable or disable Hall-Term
-I_IEq('hall_term') = 'NONE'; % NONE, USE_HALL
+I_IEq('hall_term') = 'USE_HALL'; % NONE, USE_HALL
 %Enable or disable artificial dissipation
 I_IEq('dissipation') = 'NONE'; %NONE, USE_ARTIFICIAL_DISSIPATION
 %Specify what kind of artifical dissipation shall be used
@@ -120,6 +120,7 @@ for N = Ns
                   N, order, char(form_uiBj), char(form_source), char(form_ujBi));
 
           I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
+          I_TI('cfl') = 1/double(N);
           I_IEq('form_uibj') = char(form_uiBj);
           I_IEq('form_source') = char(form_source);
           I_IEq('form_ujbi') = char(form_ujBi);
@@ -141,4 +142,3 @@ for N = Ns
 end
 
 fclose(io);
-
