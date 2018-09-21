@@ -12,8 +12,9 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % Initialise logging variables
 kernel_runtime = 0;
 RK_block_size = 15000;
-if I_RunOps('save_energy_over_time')
+if I_RunOps('save_integrals_over_time')
   energy = IEq_fields.energy;
+  L2error = IEq_fields.L2error;
 end
 norm2_output = IEq_fields.norm2_output;
 
@@ -40,11 +41,16 @@ switch time_integrator_num_fields
 
                 [field_b] = induction_eq.clean_div(field_b, DC_fields);
             end
-        elseif I_RunOps('save_energy_over_time')
+        elseif I_RunOps('save_integrals_over_time')
             for step = 1:I_TI('num_steps')
                 norm2_output(:) = 0;
                 cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), field_b, norm2_output, 0);
                 energy(step) = sum(norm2_output);
+
+                cl_run_kernel(I_Tech('device'), 'analytical_b', I_IEq('g_range'), I_IEq('l_range'), field_b2, current_time, 0);
+                norm2_output(:) = 0;
+                cl_run_kernel(I_Tech('device'), 'norm2_diff', I_Tech('g_range'), I_Tech('l_range'), field_b, field_b2, norm2_output, 0);
+                L2error(step) = sqrt(sum(norm2_output));
 
                 t = cl_run_kernel(I_Tech('device'), RK_Step, I_IEq('g_range'), I_IEq('l_range'), ...
                                   field_b, field_b2, field_curlB_rho, ...
@@ -90,7 +96,7 @@ switch time_integrator_num_fields
 
                 [field_b] = induction_eq.clean_div(field_b, DC_fields);
             end
-        elseif I_RunOps('save_energy_over_time')
+        elseif I_RunOps('save_integrals_over_time')
               for step = 1:I_TI('num_steps')
                   t = cl_run_kernel(I_Tech('device'), RK_Step, I_IEq('g_range'), I_IEq('l_range'), ...
                                     field_b, field_b2, field_b3, field_curlB_rho, ...
@@ -147,6 +153,10 @@ cl_run_kernel(I_Tech('device'), 'analytical_b', I_IEq('g_range'), I_IEq('l_range
 norm2_output(:) = 0;
 cl_run_kernel(I_Tech('device'), 'norm2_diff', I_Tech('g_range'), I_Tech('l_range'), field_b, field_b_ana, norm2_output, 0);
 I_Results('abs_err') = sqrt(sum(norm2_output));
+if I_RunOps('save_integrals_over_time')
+    L2error(I_TI('num_steps')+1) = I_Results('abs_err');
+    I_Results('L2error_over_time') = L2error;
+end
 
 norm2_output(:) = 0;
 cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), field_b_ana, norm2_output, 0);
@@ -166,8 +176,8 @@ I_Results('divergence_norm') = sqrt(sum(norm2_output));
 norm2_output(:) = 0;
 cl_run_kernel(I_Tech('device'), 'norm2', I_Tech('g_range'), I_Tech('l_range'), field_b, norm2_output, 0);
 I_Results('energy') = sum(norm2_output);
-energy(I_TI('num_steps')+1) = I_Results('energy');
-if I_RunOps('save_energy_over_time')
+if I_RunOps('save_integrals_over_time')
+    energy(I_TI('num_steps')+1) = I_Results('energy');
     I_Results('energy_over_time') = energy;
 end
 
