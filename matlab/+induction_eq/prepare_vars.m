@@ -51,8 +51,8 @@ function [] = prepare_vars()
     valueSet = {0 'classical' '' false 'NONE' 0 0 0 0 0 false false};
     I_RunOps = containers.Map(keySet, valueSet,'UniformValues',false);
 
-    keySet = {'abs_err', 'rel_err', 'field_b', 'field_b_ana', 'energy', 'divergence_norm', 'runtime', 'kernel_runtime' 'energy_over_time' 'L2error_over_time'};
-    valueSet = {0 0 0 0 0 0 0 0 0 0};
+    keySet = {'abs_err', 'rel_err', 'field_b', 'field_b_ana', 'energy', 'divergence_norm', 'runtime', 'kernel_runtime' 'energy_over_time' 'L2error_B_over_time' 'L2error_divB_over_time' 'time'};
+    valueSet = {0 0 0 0 0 0 0 0 0 0 0 0};
     I_Results = containers.Map(keySet, valueSet,'UniformValues',false);
 
 end
