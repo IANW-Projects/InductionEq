@@ -26,7 +26,8 @@ if strcmp(I_Tech('REAL'),'float')
         field_u_div_cleaning = single(zeros(1, I_Tech('num_nodes_pad')));
     end
     energy = single(zeros(1, I_TI('num_steps')+1));
-    L2error = single(zeros(1, I_TI('num_steps')+1));
+    L2error_B = single(zeros(1, I_TI('num_steps')+1));
+    L2error_divB = single(zeros(1, I_TI('num_steps')+1));
 else
     % Initialize auxillary fields needed for time stepping
     field_b2 = double(zeros(4, I_Tech('num_nodes_pad')));
@@ -49,7 +50,8 @@ else
     end
 
     energy = double(zeros(1, I_TI('num_steps')+1));
-    L2error = double(zeros(1, I_TI('num_steps')+1));
+    L2error_B = double(zeros(1, I_TI('num_steps')+1));
+    L2error_divB = double(zeros(1, I_TI('num_steps')+1));
 end
 
 kernel_path_list = {};
@@ -380,7 +382,8 @@ switch time_integrator_num_fields
                             'field_divB', field_divB, ...
                             'norm2_output', norm2_output, ...
                             'energy', energy, ...
-                            'L2error', L2error);
+                            'L2error_B', L2error_B, ...
+                            'L2error_divB', L2error_divB);
 
     case 3
         IEq_fields = struct('field_b', field_b, ...
@@ -393,7 +396,8 @@ switch time_integrator_num_fields
                             'field_divB', field_divB, ...
                             'norm2_output', norm2_output, ...
                             'energy', energy, ...
-                            'L2error', L2error);
+                            'L2error_B', L2error_B, ...
+                            'L2error_divB', L2error_divB);
 
     otherwise
         error('Wrong value of time_integrator_num_fields = %d', time_integrator_num_fields)

@@ -129,8 +129,9 @@ I_RunOps('plot_difference') = '';
 I_RunOps('plot_divergence') = '';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
-%If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time'),
-%the L2error (if available) to I_Results('L2error_over_time'), and the time to I_Results('time')
+%If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time'), the
+%L2 errors (if available) to I_Results('L2error_B_over_time') & I_Results('L2error_divB_over_time')
+%and the time to I_Results('time')
 I_RunOps('save_integrals_over_time') = false;
 
 %Initialize the magnetic field, the velocity field and the density field
