@@ -125,11 +125,12 @@ for N = Ns
       form_uiBj = form{1}{1};
       form_source = form{1}{2};
       form_ujBi = form{1}{3};
-      
+
       fprintf('N = %4d, order = %d, form_uiBj = %16s, form_source = %18s, form_ujBi = %16s\n', ...
               N, order, char(form_uiBj), char(form_source), char(form_ujBi));
 
       I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
+      I_TI('cfl') = 1/double(N);
       I_IEq('form_uibj') = char(form_uiBj);
       I_IEq('form_source') = char(form_source);
       I_IEq('form_ujbi') = char(form_ujBi);
@@ -137,7 +138,7 @@ for N = Ns
 
       [field_b_init, field_u_init, field_rho_init] = induction_eq.initialize();
       induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
-          
+
       fprintf(io, '%d, %d, %s, %s, %s, %.15e, %.15e, %.15e, %.15e \n', ...
               N, order, char(form_uiBj), char(form_source), char(form_ujBi), ...
               I_Results('runtime'), I_Results('energy'), I_Results('abs_err'), I_Results('divergence_norm'));
