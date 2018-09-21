@@ -101,42 +101,49 @@ I_RunOps('plot_divergence') = '';
 I_RunOps('save_fields') = false;
 
 
-Ns = [uint32(40), uint32(80),];
+Ns = [uint32(40), uint32(80), ];
 orders = [2, 4, 6];
 forms_uiBj = {'USE_UIBJ_PRODUCT', 'USE_UIBJ_SPLIT', 'USE_UIBJ_CENTRAL'};
 forms_source = {'USE_SOURCE_ZERO', 'USE_SOURCE_SPLIT', 'USE_SOURCE_CENTRAL'};
 forms_ujBi = {'USE_UJBI_PRODUCT', 'USE_UJBI_SPLIT', 'USE_UJBI_CENTRAL'};
 
+forms = { ...
+    {'USE_UIBJ_CENTRAL', 'USE_SOURCE_ZERO', 'USE_UJBI_CENTRAL'}, ...
+    {'USE_UIBJ_CENTRAL', 'USE_SOURCE_CENTRAL', 'USE_UJBI_CENTRAL'}, ...
+    {'USE_UIBJ_SPLIT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_SPLIT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_PRODUCT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_SPLIT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_CENTRAL'}, ...
+};
 
 io = fopen('hall_periodic_convergence.txt', 'w');
 fprintf(io, '# N, order, form_uiBj, form_source, form_ujBi, runtime, energy, error in B, error in div B \n');
 
 for N = Ns
   for order = orders
-    for form_uiBj = forms_uiBj
-      for form_source = forms_source
-        for form_ujBi = forms_ujBi
-          fprintf('N = %4d, order = %d, form_uiBj = %16s, form_source = %18s, form_ujBi = %16s\n', ...
-                  N, order, char(form_uiBj), char(form_source), char(form_ujBi));
+    for form = forms
+      form_uiBj = form{1}{1};
+      form_source = form{1}{2};
+      form_ujBi = form{1}{3};
+      
+      fprintf('N = %4d, order = %d, form_uiBj = %16s, form_source = %18s, form_ujBi = %16s\n', ...
+              N, order, char(form_uiBj), char(form_source), char(form_ujBi));
 
-          I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
-          I_TI('cfl') = 1/double(N);
-          I_IEq('form_uibj') = char(form_uiBj);
-          I_IEq('form_source') = char(form_source);
-          I_IEq('form_ujbi') = char(form_ujBi);
-          I_RunOps('order') = order;
+      I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
+      I_IEq('form_uibj') = char(form_uiBj);
+      I_IEq('form_source') = char(form_source);
+      I_IEq('form_ujbi') = char(form_ujBi);
+      I_RunOps('order') = order;
 
-          [field_b_init, field_u_init, field_rho_init] = induction_eq.initialize();
-          induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
+      [field_b_init, field_u_init, field_rho_init] = induction_eq.initialize();
+      induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
+          
+      fprintf(io, '%d, %d, %s, %s, %s, %.15e, %.15e, %.15e, %.15e \n', ...
+              N, order, char(form_uiBj), char(form_source), char(form_ujBi), ...
+              I_Results('runtime'), I_Results('energy'), I_Results('abs_err'), I_Results('divergence_norm'));
 
-          fprintf(io, '%d, %d, %s, %s, %s, %.15e, %.15e, %.15e, %.15e \n', ...
-                  N, order, char(form_uiBj), char(form_source), char(form_ujBi), ...
-                  I_Results('runtime'), I_Results('energy'), I_Results('abs_err'), I_Results('divergence_norm'));
-
-          fprintf('  Runtime: %8.2f s, Error in B: %.3e, Error in div B: %.3e \n\n', ...
-                  I_Results('runtime'), I_Results('abs_err'), I_Results('divergence_norm'));
-        end
-      end
+      fprintf('  Runtime: %8.2f s, Error in B: %.3e, Error in div B: %.3e \n\n', ...
+              I_Results('runtime'), I_Results('abs_err'), I_Results('divergence_norm'));
     end
   end
 end
