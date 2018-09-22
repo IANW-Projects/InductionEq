@@ -20,7 +20,7 @@ I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 4*pi/3;
 I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 4*pi/3;
 
 % Time integration related variables
-I_TI('cfl') = 1/double(N); %Define the Courant–Friedrichs–Lewy condition
+I_TI('cfl') = 0.95/double(N); %Define the Courant–Friedrichs–Lewy condition
 I_TI('final_time') = 1.0;
 %Chose the time integrator. Below is a list of up to date available
 %options:
@@ -136,7 +136,7 @@ for N = Ns
               N, order, char(form_uiBj), char(form_source), char(form_ujBi));
 
       I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
-      I_TI('cfl') = 1/double(N);
+      I_TI('cfl') = 0.95/double(N);
       I_IEq('form_uibj') = char(form_uiBj);
       I_IEq('form_source') = char(form_source);
       I_IEq('form_ujbi') = char(form_ujBi);
