@@ -118,6 +118,8 @@ forms = { ...
 
 io = fopen('hall_periodic_convergence.txt', 'w');
 fprintf(io, '# N, order, form_uiBj, form_source, form_ujBi, runtime, energy, error in B, error in div B \n');
+names = cl_get_devices;
+fprintf(io, '#  %s \n', names{I_Tech('device')});
 
 for N = Ns
   for order = orders

@@ -15,13 +15,13 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % has 2*4 boundary nodes which means the minimum number of nodes amounts to 8.
 N = uint32(40);
 I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
-I_Mesh('XMIN') = -1.0; I_Mesh('XMAX') = 1.0;
-I_Mesh('YMIN') = -1.0; I_Mesh('YMAX') = 1.0;
-I_Mesh('ZMIN') = -1.0; I_Mesh('ZMAX') = 1.0;
+I_Mesh('XMIN') = 0.0; I_Mesh('XMAX') = 4*pi/3;
+I_Mesh('YMIN') = 0.0; I_Mesh('YMAX') = 4*pi/3;
+I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 4*pi/3;
 
 % Time integration related variables
-I_TI('cfl') = 0.95; %Define the Courant–Friedrichs–Lewy condition
-I_TI('final_time') = 2*pi;
+I_TI('cfl') = 1/double(N); %Define the Courant–Friedrichs–Lewy condition
+I_TI('final_time') = 1.0;
 %Chose the time integrator. Below is a list of up to date available
 %options:
 % SSPRK33, SSPRK104,
@@ -36,12 +36,12 @@ I_IEq('form_uibj') = 'USE_UIBJ_PRODUCT'; % PRODUCT, SPLIT, CENTRAL
 I_IEq('form_source') = 'USE_SOURCE_CENTRAL'; % CENTRAL, SPLIT, ZERO
 I_IEq('form_ujbi') = 'USE_UJBI_CENTRAL'; % SPLIT, CENTRAL, PRODUCT
 %Enable or disable Hall-Term
-I_IEq('hall_term') = 'NONE'; % NONE, USE_HALL
+I_IEq('hall_term') = 'USE_HALL'; % NONE, USE_HALL
 %Enable or disable artificial dissipation
 I_IEq('dissipation') = 'NONE'; %NONE, USE_ARTIFICIAL_DISSIPATION
 %Specify what kind of artifical dissipation shall be used
 %USE_ADAPTIVE_DISSIPATION, USE_FIRST_ORDER_DISSIPATION, USE_HIGH_ORDER_DISSIPATION
-I_IEq('dissipation_form') = 'USE_ADAPTIVE_DISSIPATION';
+I_IEq('dissipation_form') = 'USE_HIGH_ORDER_DISSIPATION';
 %Additional parameters needed for adaptive dissipation. For typical values
 %see Svärd et al. (2009).
 I_IEq('MP2MIN') = 1;
@@ -83,9 +83,9 @@ I_RunOps('operator_form') = 'classical'; % 'classical' or 'extended' operators
 % Specify the testcase. The name of the testcase has to be equal to the
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:
-% rotation_2D, rotation_3D, alfven_periodic_2D, hall_travelling_wave, hall_periodic
-I_RunOps('testcase') = 'rotation_2D';
-I_RunOps('variable_u') = false; % must be set to true if a variable velocity is used
+% rotation_2D, rotation_3D, alfven_periodic_2D, confined_domain, hall_travelling_wave, hall_periodic
+I_RunOps('testcase') = 'hall_periodic';
+I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
 I_RunOps('periodic') = 'NONE'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
                                        % if periodic boundary conditions should be used
 % Optional plotting parameters (2D plots).
@@ -99,9 +99,13 @@ I_RunOps('plot_difference') = '';
 I_RunOps('plot_divergence') = '';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
+%If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time'), the
+%L2 errors (if available) to I_Results('L2error_B_over_time') & I_Results('L2error_divB_over_time')
+%and the time to I_Results('time')
+I_RunOps('save_integrals_over_time') = false;
 
 
-Ns = [uint32(40), uint32(80), uint32(160), uint32(320), ];
+Ns = [uint32(40), uint32(80), ];
 orders = [2, 4, 6];
 forms_uiBj = {'USE_UIBJ_PRODUCT', 'USE_UIBJ_SPLIT', 'USE_UIBJ_CENTRAL'};
 forms_source = {'USE_SOURCE_ZERO', 'USE_SOURCE_SPLIT', 'USE_SOURCE_CENTRAL'};
@@ -116,7 +120,7 @@ forms = { ...
     {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_CENTRAL'}, ...
 };
 
-io = fopen('rotation_3D_convergence.txt', 'w');
+io = fopen('hall_outflow_experiments.txt', 'w');
 fprintf(io, '# N, order, form_uiBj, form_source, form_ujBi, runtime, energy, error in B, error in div B \n');
 names = cl_get_devices;
 fprintf(io, '#  %s \n', names{I_Tech('device')});
@@ -132,6 +136,7 @@ for N = Ns
               N, order, char(form_uiBj), char(form_source), char(form_ujBi));
 
       I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
+      I_TI('cfl') = 1/double(N);
       I_IEq('form_uibj') = char(form_uiBj);
       I_IEq('form_source') = char(form_source);
       I_IEq('form_ujbi') = char(form_ujBi);
@@ -144,11 +149,10 @@ for N = Ns
               N, order, char(form_uiBj), char(form_source), char(form_ujBi), ...
               I_Results('runtime'), I_Results('energy'), I_Results('abs_err'), I_Results('divergence_norm'));
 
-      fprintf('  Runtime: %8.2f s, Error in B: %.3e, Error in div B: %.3e \n\n', ...
-              I_Results('runtime'), I_Results('abs_err'), I_Results('divergence_norm'));
+      fprintf('  Runtime: %8.2f s, Energy (B): %.3e, Error in div B: %.3e \n\n', ...
+              I_Results('runtime'), I_Results('energy'), I_Results('divergence_norm'));
     end
   end
 end
 
 fclose(io);
-

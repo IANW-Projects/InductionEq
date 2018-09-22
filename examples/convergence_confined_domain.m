@@ -118,6 +118,8 @@ forms = { ...
 
 io = fopen('confined_domain_convergence.txt', 'w');
 fprintf(io, '# N, order, form_uiBj, form_source, form_ujBi, runtime, energy, error in B, error in div B \n');
+names = cl_get_devices;
+fprintf(io, '#  %s \n', names{I_Tech('device')});
 
 for N = Ns
   for order = orders
@@ -125,7 +127,7 @@ for N = Ns
       form_uiBj = form{1}{1};
       form_source = form{1}{2};
       form_ujBi = form{1}{3};
-      
+
       fprintf('N = %4d, order = %d, form_uiBj = %16s, form_source = %18s, form_ujBi = %16s\n', ...
               N, order, char(form_uiBj), char(form_source), char(form_ujBi));
 
@@ -137,7 +139,7 @@ for N = Ns
 
       [field_b_init, field_u_init, field_rho_init] = induction_eq.initialize();
       induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
-          
+
       fprintf(io, '%d, %d, %s, %s, %s, %.15e, %.15e, %.15e, %.15e \n', ...
               N, order, char(form_uiBj), char(form_source), char(form_ujBi), ...
               I_Results('runtime'), I_Results('energy'), I_Results('abs_err'), I_Results('divergence_norm'));
