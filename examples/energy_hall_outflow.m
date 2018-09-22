@@ -1,38 +1,10 @@
 %This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
 
-%Use this script to specify the general conditions and the testcase you
-%want to investigate. It calls functions to initializes all variables and fields relevant for
-%the testcase and advance the numerical solution in time. Depending on the
-%properties that shall be investigated additional functionalities can be
-%enabled, e.g. divergence cleaning.
-
 %clc;
 clear;
 close all;
 
 addpath('../matlab')
-
-%prepare_vars() initializes containers (maps) in which all variables (label, value) are
-%stored. Variables are grouped together by purpose:
-%I_Mesh: Contains all variables concerning the discrete mesh, e.g.
-%stepsize, box size
-%I_TI: Contains all variables concerning time integration, e.g. time
-%integrator, timestep
-%I_IEq: Contains all variables relevant for the induction equation, e.g.
-%discretization form, switch for additional artificial dissipation
-%I_DC: Contains all variables concerning divergence cleaning, e.g.
-%discretization, error threshold
-%I_Tech: Contains all variables of technical nature, e.g. the device,
-%computation precision
-%I_RunOps: Specifies the parameters of a computation, e.g. which variables
-%will be saved, the testcase
-
-%Variables in capital letters are program specific defines which are set by
-%openCL compile settings. If the value is a string in captial letters
-%beginning with USE it acts as a switch, e.g. to enable artificial dissipation
-%or to switch between different discretizations. In case the key is written
-%in capital letters the program define will be set to the corresponding
-%value of the key.
 
 induction_eq.prepare_vars();
 
@@ -49,7 +21,7 @@ I_Mesh('ZMIN') = 0.0; I_Mesh('ZMAX') = 4*pi/3;
 
 % Time integration related variables
 I_TI('cfl') = 0.95/double(N); %Define the Courant–Friedrichs–Lewy condition
-I_TI('final_time') = 1.0;
+I_TI('final_time') = 5.0;
 %Chose the time integrator. Below is a list of up to date available
 %options:
 % SSPRK33, SSPRK104,
@@ -66,21 +38,21 @@ I_IEq('form_ujbi') = 'USE_UJBI_CENTRAL'; % SPLIT, CENTRAL, PRODUCT
 %Enable or disable Hall-Term
 I_IEq('hall_term') = 'USE_HALL'; % NONE, USE_HALL
 %Enable or disable artificial dissipation
-I_IEq('dissipation') = 'NONE'; % NONE, USE_ARTIFICIAL_DISSIPATION
+I_IEq('dissipation') = 'NONE'; %NONE, USE_ARTIFICIAL_DISSIPATION
 %Specify what kind of artifical dissipation shall be used
-I_IEq('dissipation_form') = 'USE_HIGH_ORDER_DISSIPATION'; %USE_ADAPTIVE_DISSIPATION USE_FIRST_ORDER_DISSIPATION USE_HIGH_ORDER_DISSIPATION
+%USE_ADAPTIVE_DISSIPATION, USE_FIRST_ORDER_DISSIPATION, USE_HIGH_ORDER_DISSIPATION
+I_IEq('dissipation_form') = 'USE_HIGH_ORDER_DISSIPATION';
 %Additional parameters needed for adaptive dissipation. For typical values
-%see (add reference)
+%see Svärd et al. (2009).
 I_IEq('MP2MIN') = 1;
 I_IEq('MP2MAX') = 10;
 I_IEq('CMIN') = 1;
 I_IEq('CMAX') = 10;
 
-
 % Divergence cleaning related variables
 %Enable divergence cleaning (true) or disable divergence cleaning (false)
 I_DC('divergence_cleaning') = false;
-% Choose how the laplace operator will be discretized
+%Choose how the laplace operator will be discretized
 I_DC('divergence_cleaning_form') = 'USE_LAPLACE_WIDE_STENCIL_LNS';
 %USE_LAPLACE_WIDE_STENCIL_LNS USE_LAPLACE_WIDE_STENCIL_DIRICHLET USE_LAPLACE_NARROW_STENCIL_DIRICHLET
 %Specify a threshold for the divergence norm
@@ -89,13 +61,12 @@ I_DC('absolute_error_threshold') = 1e-3;
 %threshold is not reached
 I_DC('max_iterations') = 50;
 
-
 % Technical details
 % Specify the OpenCL device that will be used for computation
 I_Tech('device') = 1;
 
 %Switch between single floating point and double floating point precision
-I_Tech('REAL') = 'double'; %float
+I_Tech('REAL') = 'double'; % float
 I_Tech('REAL4') = sprintf('%s4',I_Tech('REAL')); %Vector datatype
 
 %Compiler based optimizations
@@ -105,14 +76,14 @@ else
     I_Tech('optimizations') = ' -cl-mad-enable -cl-no-signed-zeros -cl-finite-math-only';
 end
 
-% Option relevant for run
+% Options relevant for a run
 % Defines the order
 I_RunOps('order') = 4; % 2, 4, 6
 I_RunOps('operator_form') = 'classical'; % 'classical' or 'extended' operators
 % Specify the testcase. The name of the testcase has to be equal to the
 % name of a header file which contains a function describing the initial state.
 % Example testcases are:
-% rotation_2D, rotation_3D, alfven_periodic_2D, hall_travelling_wave, hall_periodic
+% rotation_2D, rotation_3D, alfven_periodic_2D, confined_domain, hall_travelling_wave, hall_periodic
 I_RunOps('testcase') = 'hall_periodic';
 I_RunOps('variable_u') = true; % must be set to true if a variable velocity is used
 I_RunOps('periodic') = 'NONE'; % 'NONE', 'USE_PERIODIC'; must be set to 'USE_PERIODIC'
@@ -126,23 +97,64 @@ I_RunOps('plot_numerical_solution') = '';
 I_RunOps('plot_analytical_solution') = '';
 I_RunOps('plot_difference') = '';
 I_RunOps('plot_divergence') = '';
-%If set to true the magnetic field will be saved to I_Results('field_b')
+%If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
 %If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time'), the
 %L2 errors (if available) to I_Results('L2error_B_over_time') & I_Results('L2error_divB_over_time')
 %and the time to I_Results('time')
-I_RunOps('save_integrals_over_time') = false;
+I_RunOps('save_integrals_over_time') = true;
 
-%Initialize the magnetic field, the velocity field and the density field
-%according to the specified testcase. Also calculates and sets additional
-%variables, e.g. stepsize, timestep, local work group size, etc...
-[field_b_init, field_u_init, field_rho_init] = induction_eq.initialize();
 
-fprintf('Testcase: %s \nOrder: %d \nTime integrator: %s\nDT: %.16e   N_STEPS: %5d   FINAL_TIME: %.16e\nDX: %.16e   NODES_X: %5d\nDY: %.16e   NODES_Y: %5d\nDZ: %.16e   NODES_Z: %5d\nDissipation: %s \nDivergence cleaning: %d \nREAL: %s\n',...
-        I_RunOps('testcase'), I_RunOps('order'), I_TI('time_integrator'), I_TI('DT'), I_TI('num_steps'), I_TI('final_time'), I_Mesh('DX'), I_Mesh('NODES_X'), I_Mesh('DY'), I_Mesh('NODES_Y'), I_Mesh('DZ'), I_Mesh('NODES_Z'), I_IEq('dissipation'), I_DC('divergence_cleaning'), I_Tech('REAL'));
-%%
-%Takes the initialized fields and advances the solution in time
-induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
+Ns = [uint32(40), ];
+orders = [2, 4, 6];
+forms_uiBj = {'USE_UIBJ_PRODUCT', 'USE_UIBJ_SPLIT', 'USE_UIBJ_CENTRAL'};
+forms_source = {'USE_SOURCE_ZERO', 'USE_SOURCE_SPLIT', 'USE_SOURCE_CENTRAL'};
+forms_ujBi = {'USE_UJBI_PRODUCT', 'USE_UJBI_SPLIT', 'USE_UJBI_CENTRAL'};
 
-fprintf('Divergence Norm: %.15e    Total Energy: %.15e\n\n', ...
-        I_Results('divergence_norm'), I_Results('energy'))
+forms = { ...
+    {'USE_UIBJ_CENTRAL', 'USE_SOURCE_ZERO', 'USE_UJBI_CENTRAL'}, ...
+    {'USE_UIBJ_CENTRAL', 'USE_SOURCE_CENTRAL', 'USE_UJBI_CENTRAL'}, ...
+    {'USE_UIBJ_SPLIT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_SPLIT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_PRODUCT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_SPLIT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_CENTRAL'}, ...
+};
+
+
+for order = orders
+  for form = forms
+    form_uiBj = char(form{1}{1});
+    form_source = char(form{1}{2});
+    form_ujBi = char(form{1}{3});
+
+    fprintf('N = %4d, order = %d, form_uiBj = %16s, form_source = %18s, form_ujBi = %16s\n', ...
+            N, order, char(form_uiBj), char(form_source), char(form_ujBi));
+
+    I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
+    I_TI('cfl') = 0.95/double(N);
+    I_IEq('form_uibj') = char(form_uiBj);
+    I_IEq('form_source') = char(form_source);
+    I_IEq('form_ujbi') = char(form_ujBi);
+    I_RunOps('order') = order;
+
+    [field_b_init, field_u_init, field_rho_init] = induction_eq.initialize();
+    induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
+    
+    filename = sprintf('hall_outflow_N_%d_order_%d_%s_%s_%s.h5', ...
+                        N, order, lower(form_uiBj(10:end)), lower(form_source(12:end)), ...
+                        lower(form_ujBi(10:end)));
+    if exist(filename, 'file')
+        delete(filename)
+    end
+    data = I_Results('time'); name = '/time';
+    h5create(filename, name, length(data)); h5write(filename, name, data);
+    data = I_Results('energy_over_time'); name = '/energy';
+    h5create(filename, name, length(data)); h5write(filename, name, data);
+    data = I_Results('L2error_divB_over_time'); name = '/L2error_divB';
+    h5create(filename, name, length(data)); h5write(filename, name, data);
+
+    fprintf('  Runtime: %8.2f s, Energy (B): %.3e, Error in div B: %.3e \n\n', ...
+            I_Results('runtime'), I_Results('energy'), I_Results('divergence_norm'));
+  end
+end
+
