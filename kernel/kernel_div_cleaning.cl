@@ -49,7 +49,7 @@ inline REAL laplace_divcleaning(uint ix, uint iy, uint iz, global REAL *d_field)
 	  }
 
 	#else
-	 	#error "Define discretisation if the Laplace operator for divergence cleaning!\n"
+	 	#error "Define discretization of the Laplace operator for divergence cleaning!\n"
   #endif
 
   return val;

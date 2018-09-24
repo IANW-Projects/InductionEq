@@ -21,7 +21,6 @@ inline REAL4 DB(uint ix, uint iy, uint iz, global REAL4 *d_field_b, global REAL4
   #else
     // Computes the approximate time derivative for the linear induction equation at boundary nodes
     db_dt = db_dt + convec_surface(ix, iy, iz, d_field_b, d_field_u, time);
-    #warning "Warning in kernel_time_integrator.cl: Hall term not included!"
   #endif
 
   #ifdef USE_ARTIFICIAL_DISSIPATION

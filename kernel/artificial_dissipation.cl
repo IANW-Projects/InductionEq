@@ -171,8 +171,6 @@ inline REAL4 artificial_dissipation(uint ix, uint iy, uint iz, global REAL4 *d_f
     diss = first_order_dissipation(ix, iy, iz, d_field_b, d_field_u);
   #elif defined USE_ADAPTIVE_DISSIPATION
     diss = adaptive_dissipation(ix, iy, iz, d_field_b, d_field_u);
-  #else
-    #warning "Warning in artificial_dissipation.cl: No artifical dissipation is added!"
   #endif
 
 	return diss;
