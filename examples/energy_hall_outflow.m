@@ -1,5 +1,12 @@
 %This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
 
+% This script iterates through all orders and combinations of
+% discretization forms of interest for the linear induction equation and computes the
+% energy of the solution and the divergence error over time. Only outflow 
+% boundary conditions are used and the Hall-Term is included. 
+% As the initial condition an analytical solution of the 
+% nonlinear induction equation is used (testcase: hall_periodic). 
+
 %clc;
 clear;
 close all;
@@ -120,7 +127,7 @@ forms = { ...
     {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_CENTRAL'}, ...
 };
 
-
+% Iterate over orders and discretization forms
 for order = orders
   for form = forms
     form_uiBj = char(form{1}{1});
