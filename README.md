@@ -1,5 +1,7 @@
 # Induction Equation
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1434409.svg)](https://doi.org/10.5281/zenodo.1434409)
+
 This is a set of tools for numerically solving the 
 [nonlinear magnetic induction equation](https://github.com/MuMPlaCL/InductionEq/blob/master/docs/induction_equation.ipynb)
 with OpenCL. It is intended as a tool to investigate different properties of the linear and nonlinear induction equation
