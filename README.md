@@ -1,6 +1,8 @@
 # Induction Equation
 
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1434409.svg)](https://doi.org/10.5281/zenodo.1434409) [![License](https://licensebuttons.net/l/by-nc-nd/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode)
+
 
 This is a set of tools for numerically solving the 
 [nonlinear magnetic induction equation](https://github.com/MuMPlaCL/InductionEq/blob/master/docs/induction_equation.ipynb)
@@ -59,3 +61,5 @@ This project is licensed under the terms of the Creative Commons [CC BY-NC-ND 4.
 Product and company names may be trademarks or registered trademarks of their respective holders.
 Use of them does not imply any affiliation with or endorsement by them or their affiliates.
 Everything is provided as is and without warranty. Use at your own risk!
+=======
+This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
