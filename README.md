@@ -39,3 +39,19 @@ To run the examples the following must be installed:
  ## License
 
 This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+
+
+## Citation
+
+This software can be cited using the following bibtex entry.
+```
+@misc{ranocha2018induction,
+  title={{InductionEq}. A set of tools for numerically solving the nonlinear
+         magnetic induction equation with Hall effect in {OpenCL}.},
+  author={Ranocha, Hendrik and Ostaszewski, Katharina and Heinisch, Philip},
+  month={09},
+  year={2018},
+  doi={10.5281/zenodo.1434409}
+}
+```
+
