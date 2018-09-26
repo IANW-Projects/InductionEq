@@ -1,4 +1,4 @@
-%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 function [kernel_path_list, settings, IEq_fields, time_integrator_num_fields, DC_fields, RK_Step] = compute_numerical_solution_setup(field_b, field_u, field_rho)
 
