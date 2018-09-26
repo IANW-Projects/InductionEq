@@ -6,7 +6,7 @@
 
 This is a set of tools for numerically solving the 
 [nonlinear magnetic induction equation](https://github.com/MuMPlaCL/InductionEq/blob/master/docs/induction_equation.ipynb)
-with OpenCL. It is intended as a tool to investigate different properties of the linear and nonlinear induction equation
+with OpenCL. It is intended as a research tool to investigate different properties of the linear and nonlinear induction equation
 for user specified testcases. All numerical aspects are encapsulated in OpenCL kernels. The OpenCL host side is abstracted 
 with the help of [MatCL](https://github.com/MuMPlaCL/MatCL), an OpenCL interface for MathWorks Matlab. This provides
 the user with an intuitive and easy way of handling and processing input and output data without any intricate knowledge of
@@ -19,7 +19,7 @@ mathematics, meaning the form of discretization, methods of different order for 
 and admissable boundary conditions for the linear and nonlinear induction equation. Results will be published in the near 
 future. 
 
-Exemplary testcases for the linear and nonlinear induction equation are provided in the (`examples`) folder. 
+Exemplary testcases for the linear and nonlinear induction equation can be found in the `examples` folder. 
 Specific readme files are available in the subfolders and additional comments are provided in the source files.
 
 This is still very much work in progress. If you have any questions or want to contribute feel free to contact us.
