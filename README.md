@@ -46,6 +46,7 @@ This software can be cited using the following bibtex entry.
   author={Ranocha, Hendrik and Ostaszewski, Katharina and Heinisch, Philip},
   month={09},
   year={2018},
+  howpublished={\url{https://github.com/MuMPlaCL/InductionEq}},
   doi={10.5281/zenodo.1434409}
 }
 ```
