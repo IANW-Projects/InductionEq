@@ -1,4 +1,4 @@
-%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 function [field_b] = clean_div_CG(field_b, DC_fields)
 

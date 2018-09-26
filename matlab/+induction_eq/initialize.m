@@ -1,4 +1,4 @@
-%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 function [field_b_init, field_u_init, field_rho_init] = initialize()
 
@@ -24,10 +24,10 @@ function [field_b_init, field_u_init, field_rho_init] = initialize()
 
     num_nodes = I_Mesh('NODES_X')*I_Mesh('NODES_Y')*I_Mesh('NODES_Z');
 
-    % Depending on device type chose the local work group size. If the
-    % device is a gpu the work group size is taken from the device
-    % specifications. In case of a cpu the optimal work group size was determined
-    % through testing. Depending on the architecture this value may change.
+    % Depending on the device type choose the local work group size. If the
+    % device is a GPU the highest availble work group size is selected.
+    % For CPUs the optimal work group size was determined
+    % through testing. Especially for high-end Intel CPUs a higher value can decrease runtime.
     [~, dev_type, ~, ~, lw_size, ~] = cl_get_devices;
     type = dev_type(I_Tech('device'));
     if (strcmp(type{1},'CPU'))
