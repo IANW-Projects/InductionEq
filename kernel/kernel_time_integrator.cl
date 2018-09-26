@@ -1,4 +1,4 @@
-//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 //Contains kernel and auxillary kernel for time integration. Currently implemented are:
 //SSPRK33, SSPRK43, SSPRK93, SSPRK104, KennedyCarpenterLewis2R54C, CalvoFrancoRandez2R64, CarpenterKennedy2N54, ToulorgeDesmet2N84F

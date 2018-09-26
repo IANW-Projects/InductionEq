@@ -1,4 +1,4 @@
-//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 REAL constant CONST_A = 0.1;
 REAL constant CONST_alpha = 0.5235987755982988; // pi/6

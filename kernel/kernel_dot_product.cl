@@ -1,4 +1,4 @@
-//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 // Contains kernel to compute the dot product of two vectors. 
 // By setting the define REDUCE the reduction will be performed by the kernel with the help of atomics.

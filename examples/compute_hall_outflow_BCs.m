@@ -1,4 +1,4 @@
-%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 %Use this script to specify the general conditions and the testcase you
 %want to investigate. It calls functions to initializes all variables and fields relevant for

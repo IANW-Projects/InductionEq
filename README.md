@@ -1,7 +1,7 @@
 # Induction Equation
 
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1434409.svg)](https://doi.org/10.5281/zenodo.1434409) [![License](https://licensebuttons.net/l/by-nc-nd/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode)
+[![License](https://licensebuttons.net/l/by-nc-nd/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1434409.svg)](https://doi.org/10.5281/zenodo.1434409)
 
 
 This is a set of tools for numerically solving the 
@@ -28,10 +28,10 @@ This is still very much work in progress. If you have any questions or want to c
 
 To run the examples the following must be installed:
 
- - OpenCL Driver (CPU, GPU) 
- - OpenCL SDK 
+ - OpenCL Driver (CPU or GPU) 
+ - OpenCL C++ Headers (e.g. provided by the OpenCL vendors SDKs) 
  - Mathworks Matlab
- - MatCL [Available on GitHub](https://github.com/MuMPlaCL/MatCL)
+ - [MatCL](https://github.com/MuMPlaCL/MatCL)
  
  For ease of use you can add `MatCL` to the search path of Matlab.
  
@@ -61,5 +61,3 @@ This project is licensed under the terms of the Creative Commons [CC BY-NC-ND 4.
 Product and company names may be trademarks or registered trademarks of their respective holders.
 Use of them does not imply any affiliation with or endorsement by them or their affiliates.
 Everything is provided as is and without warranty. Use at your own risk!
-=======
-This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
