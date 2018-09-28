@@ -1,6 +1,6 @@
-//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
-//Contains the coefficients of second order derivative, dissipation and divergence cleaning operators 
+//Contains the coefficients of second order derivative, dissipation and divergence cleaning operators
 
 //------------------------------------------------------------------------------
 // Derivative and Dissipation Operators
@@ -68,13 +68,13 @@ REAL constant D_HO[2*NUM_BOUNDS+1][STENCIL_WIDTH_HOD] = {
 REAL constant SBP_laplace_WS_D0[2*NUM_BOUNDS_LAPLACE_WS_D0+1][STENCIL_WIDTH_LAPLACE_WS_D0] = {
   // left boundary coefficients
   {0.0, 0.0, 0.0, 0.0, 0.0},
-  {0.0, 0.0, 1.0/4.0, 0.0, -1.0/4.0},
+  {0.0, 0.0, 3.0/4.0, 0.0, -1.0/4.0},
   {0.0, 0.0, 1.0/2.0, 0.0, -1.0/4.0},
   // central coefficients
   {-1.0/4.0, 0.0, 1.0/2.0, 0.0, -1.0/4.0},
   // right boundary coefficients
   {-1.0/4.0, 0.0, 1.0/2.0, 0.0, 0.0},
-  {-1.0/4.0, 0.0, 1.0/4.0, 0.0, 0.0},
+  {-1.0/4.0, 0.0, 3.0/4.0, 0.0, 0.0},
   {0.0, 0.0, 0.0, 0.0, 0.0}
 };
 

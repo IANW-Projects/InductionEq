@@ -1,4 +1,4 @@
-%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 %Use this script to specify the general conditions and the testcase you
 %want to investigate. It calls functions to initializes all variables and fields relevant for
@@ -130,6 +130,10 @@ I_RunOps('plot_difference') = '';
 I_RunOps('plot_divergence') = '';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
+%If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time'), the
+%L2 errors (if available) to I_Results('L2error_B_over_time') & I_Results('L2error_divB_over_time')
+%and the time to I_Results('time')
+I_RunOps('save_integrals_over_time') = false;
 
 %Initialize the magnetic field, the velocity field and the density field
 %according to the specified testcase. Also calculates and sets additional

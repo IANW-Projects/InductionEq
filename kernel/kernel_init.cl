@@ -1,4 +1,4 @@
-//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 kernel void init_b(global REAL4 *d_field_b) {
 

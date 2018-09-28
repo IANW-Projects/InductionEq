@@ -1,4 +1,4 @@
-%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 function [kernel_path_list, settings, IEq_fields, time_integrator_num_fields, DC_fields, RK_Step] = compute_numerical_solution_setup(field_b, field_u, field_rho)
 
@@ -25,6 +25,9 @@ if strcmp(I_Tech('REAL'),'float')
         field_r = single(zeros(1, I_Tech('num_nodes_pad')));
         field_u_div_cleaning = single(zeros(1, I_Tech('num_nodes_pad')));
     end
+    energy = single(zeros(1, I_TI('num_steps')+1));
+    L2error_B = single(zeros(1, I_TI('num_steps')+1));
+    L2error_divB = single(zeros(1, I_TI('num_steps')+1));
 else
     % Initialize auxillary fields needed for time stepping
     field_b2 = double(zeros(4, I_Tech('num_nodes_pad')));
@@ -45,6 +48,10 @@ else
         field_r = double(zeros(1, I_Tech('num_nodes_pad')));
         field_u_div_cleaning = double(zeros(1, I_Tech('num_nodes_pad')));
     end
+
+    energy = double(zeros(1, I_TI('num_steps')+1));
+    L2error_B = double(zeros(1, I_TI('num_steps')+1));
+    L2error_divB = double(zeros(1, I_TI('num_steps')+1));
 end
 
 kernel_path_list = {};
@@ -373,7 +380,10 @@ switch time_integrator_num_fields
                             'field_rho', field_rho, ...
                             'current_time', current_time, ...
                             'field_divB', field_divB, ...
-                            'norm2_output', norm2_output);
+                            'norm2_output', norm2_output, ...
+                            'energy', energy, ...
+                            'L2error_B', L2error_B, ...
+                            'L2error_divB', L2error_divB);
 
     case 3
         IEq_fields = struct('field_b', field_b, ...
@@ -384,7 +394,10 @@ switch time_integrator_num_fields
                             'field_rho', field_rho, ...
                             'current_time', current_time, ...
                             'field_divB', field_divB, ...
-                            'norm2_output', norm2_output);
+                            'norm2_output', norm2_output, ...
+                            'energy', energy, ...
+                            'L2error_B', L2error_B, ...
+                            'L2error_divB', L2error_divB);
 
     otherwise
         error('Wrong value of time_integrator_num_fields = %d', time_integrator_num_fields)

@@ -1,4 +1,4 @@
-//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 //------------------------------------------------------------------------------
 // Derivative and Dissipation Operators
@@ -80,15 +80,15 @@ REAL constant D_HO[2*NUM_BOUNDS+1][STENCIL_WIDTH_HOD] = {
 REAL constant SBP_laplace_WS_D0[2*NUM_BOUNDS_LAPLACE_WS_D0+1][STENCIL_WIDTH_LAPLACE_WS_D0] = {
   // left boundary coefficients
   {0.0, 0.0, 0.0, 0.0, 0.0},
-  {0.0, 0.0, 7.0/22.0, 0.0, -3.0/11.0},
-  {0.0, 0.0, 13.0/22.0, 0.0, -3.0/11.0},
+  {0.0, 0.0, 56.0/55.0, -1.0/10.0, -3.0/11.0},
+  {0.0, -7.0/55.0, 67.0/110.0, 0.0, -3.0/11.0},
   {-7.0/22.0, 0.0, 23.0/44.0, 0.0, -1.0/4.0},
   // central coefficients
   {-1.0/4.0, 0.0, 1.0/2.0, 0.0, -1.0/4.0},
   // right boundary coefficients
   {-1.0/4.0, 0.0, 23.0/44.0, 0.0, -7.0/22.0},
-  {-3.0/11.0, 0.0, 13.0/22.0, 0.0, 0.0},
-  {-3.0/11.0, 0.0, 7.0/22.0, 0.0, 0.0},
+  {-3.0/11.0, 0.0, 67.0/110.0, -7.0/55.0, 0.0},
+  {-3.0/11.0, -1.0/10.0, 56.0/55.0, 0.0, 0.0},
   {0.0, 0.0, 0.0, 0.0, 0.0}
 };
 

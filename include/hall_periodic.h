@@ -1,4 +1,4 @@
-//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 REAL constant CONST_n1 = (REAL)(0.5773502691896258); // =1/sqrt(3)
 REAL constant CONST_n2 = (REAL)(0.5773502691896258);

@@ -1,4 +1,4 @@
-%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+%This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 function [] = prepare_vars()
 
@@ -17,8 +17,8 @@ function [] = prepare_vars()
     %I_RunOps: Specifies the parameters of a computation, e.g. which variables
     %will be saved, the testcase
 
-    %Variables in capital letters are program specific defines which are set by
-    %openCL compile settings. If the value is a string in captial letters
+    %Variables in capital letters are program specific settings which are set using
+    %OpenCL compiler defines. If the value is a string in captial letters
     %beginning with USE it acts as a switch, e.g. to enable artificial dissipation
     %or to switch between different discretizations. In case the key is written
     %in capital letters the program define will be set to the corresponding
@@ -47,12 +47,12 @@ function [] = prepare_vars()
     valueSet = {0 '' 0 0 0 0 0 ''};
     I_Tech = containers.Map(keySet, valueSet,'UniformValues',false);
 
-    keySet = {'order', 'operator_form', 'testcase', 'variable_u', 'periodic', 'plot_energy', 'plot_numerical_solution', 'plot_analytical_solution', 'plot_difference', 'plot_divergence', 'save_fields'};
-    valueSet = {0 'classical' '' false 'NONE' 0 0 0 0 0 false};
+    keySet = {'order', 'operator_form', 'testcase', 'variable_u', 'periodic', 'plot_energy', 'plot_numerical_solution', 'plot_analytical_solution', 'plot_difference', 'plot_divergence', 'save_fields', 'save_integrals_over_time'};
+    valueSet = {0 'classical' '' false 'NONE' 0 0 0 0 0 false false};
     I_RunOps = containers.Map(keySet, valueSet,'UniformValues',false);
 
-    keySet = {'abs_err', 'rel_err', 'field_b', 'field_b_ana', 'energy', 'divergence_norm', 'runtime', 'kernel_runtime'};
-    valueSet = {0 0 0 0 0 0 0 0};
+    keySet = {'abs_err', 'rel_err', 'field_b', 'field_b_ana', 'energy', 'divergence_norm', 'runtime', 'kernel_runtime' 'energy_over_time' 'L2error_B_over_time' 'L2error_divB_over_time' 'time'};
+    valueSet = {0 0 0 0 0 0 0 0 0 0 0 0};
     I_Results = containers.Map(keySet, valueSet,'UniformValues',false);
 
 end

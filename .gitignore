@@ -1,5 +1,6 @@
 # MatCL binary files
 matlab/cl_dbg_kernel.mexa64
+matlab/cl_dbgf_kernel.mexa64
 matlab/cl_get_devices.mexa64
 matlab/cl_run_kernel.mexa64
 

@@ -1,40 +1,12 @@
 %This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
-%Use this script to specify the general conditions and the testcase you
-%want to investigate. It calls functions to initializes all variables and fields relevant for
-%the testcase and advance the numerical solution in time. Depending on the
-%properties that shall be investigated additional functionalities can be
-%enabled, e.g. divergence cleaning.
-
 %clc;
 clear;
 close all;
 
 addpath('../matlab')
 
-%prepare_vars() initializes containers (maps) in which all variables (label, value) are
-%stored. Variables are grouped together by purpose:
-%I_Mesh: Contains all variables concerning the discrete mesh, e.g.
-%stepsize, box size
-%I_TI: Contains all variables concerning time integration, e.g. time
-%integrator, timestep
-%I_IEq: Contains all variables relevant for the induction equation, e.g.
-%discretization form, switch for additional artificial dissipation
-%I_DC: Contains all variables concerning divergence cleaning, e.g.
-%discretization, error threshold
-%I_Tech: Contains all variables of technical nature, e.g. the device,
-%computation precision
-%I_RunOps: Specifies the parameters of a computation, e.g. which variables
-%will be saved, the testcase
-
-%Variables in capital letters are program specific defines which are set by
-%openCL compile settings. If the value is a string in captial letters
-%beginning with USE it acts as a switch, e.g. to enable artificial dissipation
-%or to switch between different discretizations. In case the key is written
-%in capital letters the program define will be set to the corresponding
-%value of the key.
 induction_eq.prepare_vars();
-
 
 global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 
@@ -42,7 +14,7 @@ global I_Mesh I_TI I_IEq I_DC I_Tech I_RunOps I_Results
 % constrained by the number of boundary nodes, e.g. the 4th order method
 % has 2*4 boundary nodes which means the minimum number of nodes amounts to 8.
 N = uint32(40);
-I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = uint32(12);
+I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
 I_Mesh('XMIN') = -1.0; I_Mesh('XMAX') = 1.0;
 I_Mesh('YMIN') = -1.0; I_Mesh('YMAX') = 1.0;
 I_Mesh('ZMIN') = -1.0; I_Mesh('ZMAX') = 1.0;
@@ -55,8 +27,7 @@ I_TI('final_time') = 2*pi;
 % SSPRK33, SSPRK104,
 % KennedyCarpenterLewis2R54C, CalvoFrancoRandez2R64,
 % CarpenterKennedy2N54, ToulorgeDesmet2N84F
-I_TI('time_integrator') = 'KennedyCarpenterLewis2R54C';
-
+I_TI('time_integrator') = 'CarpenterKennedy2N54';
 
 % Induction equation related variables
 %Specify how the three part of the linear induction equation shall be
@@ -67,18 +38,16 @@ I_IEq('form_ujbi') = 'USE_UJBI_CENTRAL'; % SPLIT, CENTRAL, PRODUCT
 %Enable or disable Hall-Term
 I_IEq('hall_term') = 'NONE'; % NONE, USE_HALL
 %Enable or disable artificial dissipation
-I_IEq('dissipation') = 'NONE'; % NONE, USE_ARTIFICIAL_DISSIPATION
+I_IEq('dissipation') = 'NONE'; %NONE, USE_ARTIFICIAL_DISSIPATION
 %Specify what kind of artifical dissipation shall be used
-    %USE_ADAPTIVE_DISSIPATION, USE_FIRST_ORDER_DISSIPATION, USE_HIGH_ORDER_DISSIPATION
-I_IEq('dissipation_form') = 'USE_HIGH_ORDER_DISSIPATION';
-I_IEq('HO_DISSIPATION_FACTOR') = 1; % a constant (non-negative) factor adapting the influence of the high order dissipation
+%USE_ADAPTIVE_DISSIPATION, USE_FIRST_ORDER_DISSIPATION, USE_HIGH_ORDER_DISSIPATION
+I_IEq('dissipation_form') = 'USE_ADAPTIVE_DISSIPATION';
 %Additional parameters needed for adaptive dissipation. For typical values
 %see Svärd et al. (2009).
 I_IEq('MP2MIN') = 1;
 I_IEq('MP2MAX') = 10;
 I_IEq('CMIN') = 1;
 I_IEq('CMAX') = 10;
-
 
 % Divergence cleaning related variables
 %Enable divergence cleaning (true) or disable divergence cleaning (false)
@@ -91,7 +60,6 @@ I_DC('absolute_error_threshold') = 1e-3;
 %The divergence cleaner will exit after max_iterations even if the error
 %threshold is not reached
 I_DC('max_iterations') = 50;
-
 
 % Technical details
 % Specify the OpenCL device that will be used for computation
@@ -131,21 +99,56 @@ I_RunOps('plot_difference') = '';
 I_RunOps('plot_divergence') = '';
 %If set to 1 the magnetic field will be saved to I_Results('field_b')
 I_RunOps('save_fields') = false;
-%If set to true the magnetic energy (L^2 norm) will be saved to I_Results('energy_over_time'), the
-%L2 errors (if available) to I_Results('L2error_B_over_time') & I_Results('L2error_divB_over_time')
-%and the time to I_Results('time')
-I_RunOps('save_integrals_over_time') = false;
 
-%Initialize the magnetic field, the velocity field and the density field
-%according to the specified testcase. Also calculates and sets additional
-%variables, e.g. stepsize, timestep, local work group size, etc...
-[field_b_init, field_u_init, field_rho_init] = induction_eq.initialize();
 
-fprintf('Testcase: %s \nOrder: %d \nTime integrator: %s\nDT: %.16e   N_STEPS: %5d   FINAL_TIME: %.16e\nDX: %.16e   NODES_X: %5d\nDY: %.16e   NODES_Y: %5d\nDZ: %.16e   NODES_Z: %5d\nDissipation: %s \nDivergence cleaning: %d \nREAL: %s\n',...
-        I_RunOps('testcase'), I_RunOps('order'), I_TI('time_integrator'), I_TI('DT'), I_TI('num_steps'), I_TI('final_time'), I_Mesh('DX'), I_Mesh('NODES_X'), I_Mesh('DY'), I_Mesh('NODES_Y'), I_Mesh('DZ'), I_Mesh('NODES_Z'), I_IEq('dissipation'), I_DC('divergence_cleaning'), I_Tech('REAL'));
-%%
-% Takes the initialized fields and advances the solution in time
-induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
+Ns = [uint32(40), uint32(80), uint32(160), uint32(320), ];
+orders = [2, 4, 6];
+forms_uiBj = {'USE_UIBJ_PRODUCT', 'USE_UIBJ_SPLIT', 'USE_UIBJ_CENTRAL'};
+forms_source = {'USE_SOURCE_ZERO', 'USE_SOURCE_SPLIT', 'USE_SOURCE_CENTRAL'};
+forms_ujBi = {'USE_UJBI_PRODUCT', 'USE_UJBI_SPLIT', 'USE_UJBI_CENTRAL'};
 
-fprintf('Divergence Norm: %.15e    Total Energy: %.15e\nRelative Error: %.15f %%\n\n', ...
-        I_Results('divergence_norm'), I_Results('energy'), 100*I_Results('rel_err'))
+forms = { ...
+    {'USE_UIBJ_CENTRAL', 'USE_SOURCE_ZERO', 'USE_UJBI_CENTRAL'}, ...
+    {'USE_UIBJ_CENTRAL', 'USE_SOURCE_CENTRAL', 'USE_UJBI_CENTRAL'}, ...
+    {'USE_UIBJ_SPLIT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_SPLIT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_PRODUCT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_SPLIT'}, ...
+    {'USE_UIBJ_PRODUCT', 'USE_SOURCE_CENTRAL', 'USE_UJBI_CENTRAL'}, ...
+};
+
+io = fopen('rotation_3D_convergence.txt', 'w');
+fprintf(io, '# N, order, form_uiBj, form_source, form_ujBi, runtime, energy, error in B, error in div B \n');
+names = cl_get_devices;
+fprintf(io, '#  %s \n', names{I_Tech('device')});
+
+for N = Ns
+  for order = orders
+    for form = forms
+      form_uiBj = form{1}{1};
+      form_source = form{1}{2};
+      form_ujBi = form{1}{3};
+
+      fprintf('N = %4d, order = %d, form_uiBj = %16s, form_source = %18s, form_ujBi = %16s\n', ...
+              N, order, char(form_uiBj), char(form_source), char(form_ujBi));
+
+      I_Mesh('NODES_X') = N; I_Mesh('NODES_Y') = N; I_Mesh('NODES_Z') = N;
+      I_IEq('form_uibj') = char(form_uiBj);
+      I_IEq('form_source') = char(form_source);
+      I_IEq('form_ujbi') = char(form_ujBi);
+      I_RunOps('order') = order;
+
+      [field_b_init, field_u_init, field_rho_init] = induction_eq.initialize();
+      induction_eq.compute_numerical_solution(field_b_init, field_u_init, field_rho_init);
+
+      fprintf(io, '%d, %d, %s, %s, %s, %.15e, %.15e, %.15e, %.15e \n', ...
+              N, order, char(form_uiBj), char(form_source), char(form_ujBi), ...
+              I_Results('runtime'), I_Results('energy'), I_Results('abs_err'), I_Results('divergence_norm'));
+
+      fprintf('  Runtime: %8.2f s, Error in B: %.3e, Error in div B: %.3e \n\n', ...
+              I_Results('runtime'), I_Results('abs_err'), I_Results('divergence_norm'));
+    end
+  end
+end
+
+fclose(io);
+

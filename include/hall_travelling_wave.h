@@ -1,4 +1,4 @@
-//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 3.0 license.
+//This project is licensed under the terms of the Creative Commons CC BY-NC-ND 4.0 license.
 
 REAL constant CONST_B0 = (REAL)(1.0);
 REAL constant CONST_Bz = (REAL)(1.0);
