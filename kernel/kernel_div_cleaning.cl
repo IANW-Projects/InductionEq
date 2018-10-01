@@ -19,9 +19,9 @@ inline REAL laplace_divcleaning(uint ix, uint iy, uint iz, global REAL *d_field)
     int bound_z = get_bound_z(iz, NUM_BOUNDS_LAPLACE_WS_D0);
 
     for (uint i = 0; i < STENCIL_WIDTH_LAPLACE_WS_D0; i++) {
-		  val = val + SBP_laplace_WS_D0[NUM_BOUNDS_LAPLACE_WS_D0 + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_WS_D0 - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
-                + SBP_laplace_WS_D0[NUM_BOUNDS_LAPLACE_WS_D0 + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_WS_D0 - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)
-                + SBP_laplace_WS_D0[NUM_BOUNDS_LAPLACE_WS_D0 + bound_z][i]*get_scalar_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH_LAPLACE_WS_D0 - 1)/2),d_field)/((REAL)DZ*(REAL)DZ);
+		  val = val + SBP_minus_laplace_WS_D0[NUM_BOUNDS_LAPLACE_WS_D0 + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_WS_D0 - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
+                + SBP_minus_laplace_WS_D0[NUM_BOUNDS_LAPLACE_WS_D0 + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_WS_D0 - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)
+                + SBP_minus_laplace_WS_D0[NUM_BOUNDS_LAPLACE_WS_D0 + bound_z][i]*get_scalar_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH_LAPLACE_WS_D0 - 1)/2),d_field)/((REAL)DZ*(REAL)DZ);
 	  }
 
   #elif defined USE_LAPLACE_WIDE_STENCIL_LNS
@@ -31,9 +31,9 @@ inline REAL laplace_divcleaning(uint ix, uint iy, uint iz, global REAL *d_field)
     int bound_z = get_bound_z(iz, NUM_BOUNDS_LAPLACE_WS_LN);
 
     for (uint i = 0; i < STENCIL_WIDTH_LAPLACE_WS_LN; i++) {
-		  val = val + SBP_laplace_WS_LN[NUM_BOUNDS_LAPLACE_WS_LN + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_WS_LN - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
-                + SBP_laplace_WS_LN[NUM_BOUNDS_LAPLACE_WS_LN + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_WS_LN - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)
-                + SBP_laplace_WS_LN[NUM_BOUNDS_LAPLACE_WS_LN + bound_z][i]*get_scalar_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH_LAPLACE_WS_LN - 1)/2),d_field)/((REAL)DZ*(REAL)DZ);
+		  val = val + SBP_minus_laplace_WS_LN[NUM_BOUNDS_LAPLACE_WS_LN + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_WS_LN - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
+                + SBP_minus_laplace_WS_LN[NUM_BOUNDS_LAPLACE_WS_LN + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_WS_LN - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)
+                + SBP_minus_laplace_WS_LN[NUM_BOUNDS_LAPLACE_WS_LN + bound_z][i]*get_scalar_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH_LAPLACE_WS_LN - 1)/2),d_field)/((REAL)DZ*(REAL)DZ);
 	  }
 
   #elif defined USE_LAPLACE_NARROW_STENCIL_DIRICHLET
@@ -43,9 +43,9 @@ inline REAL laplace_divcleaning(uint ix, uint iy, uint iz, global REAL *d_field)
     int bound_z = get_bound_z(iz, NUM_BOUNDS_LAPLACE_NS_D0);
 
     for (uint i = 0; i < STENCIL_WIDTH_LAPLACE_NS_D0; i++) {
-		  val = val + SBP_laplace_NS_D0[NUM_BOUNDS_LAPLACE_NS_D0 + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_NS_D0 - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
-                + SBP_laplace_NS_D0[NUM_BOUNDS_LAPLACE_NS_D0 + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_NS_D0 - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)
-                + SBP_laplace_NS_D0[NUM_BOUNDS_LAPLACE_NS_D0 + bound_z][i]*get_scalar_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH_LAPLACE_NS_D0 - 1)/2),d_field)/((REAL)DZ*(REAL)DZ);
+		  val = val + SBP_minus_laplace_NS_D0[NUM_BOUNDS_LAPLACE_NS_D0 + bound_x][i]*get_scalar_field(ix,iy,iz,(i - (STENCIL_WIDTH_LAPLACE_NS_D0 - 1)/2),0,0,d_field)/((REAL)DX*(REAL)DX)
+                + SBP_minus_laplace_NS_D0[NUM_BOUNDS_LAPLACE_NS_D0 + bound_y][i]*get_scalar_field(ix,iy,iz,0,(i - (STENCIL_WIDTH_LAPLACE_NS_D0 - 1)/2),0,d_field)/((REAL)DY*(REAL)DY)
+                + SBP_minus_laplace_NS_D0[NUM_BOUNDS_LAPLACE_NS_D0 + bound_z][i]*get_scalar_field(ix,iy,iz,0,0,(i - (STENCIL_WIDTH_LAPLACE_NS_D0 - 1)/2),d_field)/((REAL)DZ*(REAL)DZ);
 	  }
 
 	#else

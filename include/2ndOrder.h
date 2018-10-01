@@ -65,7 +65,7 @@ REAL constant D_HO[2*NUM_BOUNDS+1][STENCIL_WIDTH_HOD] = {
 #define NUM_BOUNDS_LAPLACE_WS_D0 3
 #define STENCIL_WIDTH_LAPLACE_WS_D0 5
 
-REAL constant SBP_laplace_WS_D0[2*NUM_BOUNDS_LAPLACE_WS_D0+1][STENCIL_WIDTH_LAPLACE_WS_D0] = {
+REAL constant SBP_minus_laplace_WS_D0[2*NUM_BOUNDS_LAPLACE_WS_D0+1][STENCIL_WIDTH_LAPLACE_WS_D0] = {
   // left boundary coefficients
   {0.0, 0.0, 0.0, 0.0, 0.0},
   {0.0, 0.0, 3.0/4.0, 0.0, -1.0/4.0},
@@ -82,7 +82,7 @@ REAL constant SBP_laplace_WS_D0[2*NUM_BOUNDS_LAPLACE_WS_D0+1][STENCIL_WIDTH_LAPL
 #define NUM_BOUNDS_LAPLACE_NS_D0 2
 #define STENCIL_WIDTH_LAPLACE_NS_D0 3
 
-REAL constant SBP_laplace_NS_D0[2*NUM_BOUNDS_LAPLACE_NS_D0+1][STENCIL_WIDTH_LAPLACE_NS_D0] = {
+REAL constant SBP_minus_laplace_NS_D0[2*NUM_BOUNDS_LAPLACE_NS_D0+1][STENCIL_WIDTH_LAPLACE_NS_D0] = {
   // left boundary coefficients
   {0.0, 0.0, 0.0},
   {0.0, 2.0, -1.0},
@@ -97,7 +97,7 @@ REAL constant SBP_laplace_NS_D0[2*NUM_BOUNDS_LAPLACE_NS_D0+1][STENCIL_WIDTH_LAPL
 #define NUM_BOUNDS_LAPLACE_WS_LN 2
 #define STENCIL_WIDTH_LAPLACE_WS_LN 5
 
-REAL constant SBP_laplace_WS_LN[2*NUM_BOUNDS_LAPLACE_WS_LN+1][STENCIL_WIDTH_LAPLACE_WS_LN] = {
+REAL constant SBP_minus_laplace_WS_LN[2*NUM_BOUNDS_LAPLACE_WS_LN+1][STENCIL_WIDTH_LAPLACE_WS_LN] = {
   // left boundary coefficients
   {0.0, 0.0, 3.0/2.0, 1.0, -1.0/2.0},
   {0.0, 1.0/2.0, 3.0/4.0, 0.0, -1.0/4.0},
