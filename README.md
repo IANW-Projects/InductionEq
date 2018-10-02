@@ -1,7 +1,7 @@
 # Induction Equation
 
 
-[![License](https://licensebuttons.net/l/by-nc-nd/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1434409.svg)](https://doi.org/10.5281/zenodo.1434409)
+[![License](https://licensebuttons.net/l/by-nc-nd/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1434408.svg)](https://doi.org/10.5281/zenodo.1434408)
 
 
 This is a set of tools for numerically solving the
@@ -47,7 +47,7 @@ This software can be cited using the following bibtex entry.
   month={09},
   year={2018},
   howpublished={\url{https://github.com/MuMPlaCL/InductionEq}},
-  doi={10.5281/zenodo.1434409}
+  doi={10.5281/zenodo.1434408}
 }
 ```
 
