@@ -16,8 +16,8 @@ they can be used with any kind of host code or application that supports OpenCL.
 
 This project is the base of current mathematical and physics research. Hence, special emphasis is placed on the computational
 mathematics, meaning the form of discretization, methods of different order for spatial discretization and time integration
-and admissable boundary conditions for the linear and nonlinear induction equation. Results will be published in the near
-future.
+and admissable boundary conditions for the linear and nonlinear induction equation. First results have been published on
+[arXiv.org](https://arxiv.org/abs/1810.01397).
 
 Exemplary testcases for the linear and nonlinear induction equation can be found in the `examples` folder.
 Specific readme files are available in the subfolders and additional comments are provided in the source files.
@@ -38,7 +38,7 @@ To run the examples the following must be installed:
 
 ## Citation
 
-This software can be cited using the following bibtex entry.
+This software can be cited as:
 ```
 @misc{ranocha2018induction,
   title={{InductionEq}. {A} set of tools for numerically solving the nonlinear
@@ -48,6 +48,20 @@ This software can be cited using the following bibtex entry.
   year={2018},
   howpublished={\url{https://github.com/MuMPlaCL/InductionEq}},
   doi={10.5281/zenodo.1434408}
+}
+```
+The accompagnying article describing the spatial discretizations in detail is:
+```
+@online{ranocha2018numerical,
+  title={Numerical Methods for the Magnetic Induction Equation with Hall Effect
+         and Projections onto Divergence-Free Vector Fields},
+  author={Ranocha, Hendrik and Ostaszewski, Katharina and Heinisch, Philip},
+  year={2018},
+  month={10},
+  note={Submitted},
+  eprint={1810.01397},
+  eprinttype={arxiv},
+  eprintclass={math.NA}
 }
 ```
 
