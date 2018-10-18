@@ -1,0 +1,23 @@
+{
+    "description": "A set of tools for numerically solving the nonlinear magnetic induction equation with Hall effect in OpenCL", 
+    "license": "other-open", 
+    "title": "MuMPlaCL/InductionEq", 
+    "version": "v1.1.1", 
+    "upload_type": "software", 
+    "publication_date": "2018-10-18", 
+    "creators": [
+        {
+            "affiliation": "TU Braunschweig", 
+            "name": "Hendrik Ranocha"
+        }, 
+        {
+	    "affiliation": "TU Braunschweig", 
+            "name": "Katharina Ostaszewski"
+        }, 
+        {
+	    "affiliation": "TU Braunschweig", 
+            "name": "Philip Heinisch"
+        }
+    ], 
+    "access_right": "open"
+}
