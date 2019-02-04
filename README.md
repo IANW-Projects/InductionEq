@@ -5,10 +5,10 @@
 
 
 This is a set of tools for numerically solving the
-[nonlinear magnetic induction equation](https://github.com/MuMPlaCL/InductionEq/blob/master/docs/induction_equation.ipynb)
+[nonlinear magnetic induction equation](https://github.com/IANW-Projects/InductionEq/blob/master/docs/induction_equation.ipynb)
 with OpenCL. It is intended as a research tool to investigate different properties of the linear and nonlinear induction equation
 for user specified testcases. All numerical aspects are encapsulated in OpenCL kernels. The OpenCL host side is abstracted
-with the help of [MatCL](https://github.com/MuMPlaCL/MatCL), an OpenCL interface for MathWorks Matlab. This provides
+with the help of [MatCL](https://github.com/IANW-Projects/MatCL), an OpenCL interface for MathWorks Matlab. This provides
 the user with an intuitive and easy way of handling and processing input and output data without any intricate knowledge of
 OpenCL and allows for interactive development. Support for [Julia](https://julialang.org/) is currently under development
 and will be provided in the near future. Usage of the OpenCL kernels is not limited to Matlab or Julia; on the contrary
@@ -31,7 +31,7 @@ To run the examples the following must be installed:
  - OpenCL Driver (CPU or GPU)
  - OpenCL C++ Headers (e.g. provided by the OpenCL vendors SDKs)
  - Mathworks Matlab
- - [MatCL](https://github.com/MuMPlaCL/MatCL)
+ - [MatCL](https://github.com/IANW-Projects/MatCL)
 
  For ease of use you can add `MatCL` to the search path of Matlab.
 
@@ -46,7 +46,7 @@ This software can be cited as:
   author={Ranocha, Hendrik and Ostaszewski, Katharina and Heinisch, Philip},
   month={09},
   year={2018},
-  howpublished={\url{https://github.com/MuMPlaCL/InductionEq}},
+  howpublished={\url{https://github.com/IANW-Projects/InductionEq}},
   doi={10.5281/zenodo.1434408}
 }
 ```
